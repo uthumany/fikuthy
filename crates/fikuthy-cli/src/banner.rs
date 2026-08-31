@@ -142,14 +142,13 @@ fn art_line(row: usize, depth: ColorDepth, doubled: bool) -> String {
         .enumerate()
         .map(|(i, c)| {
             let g = match c {
-                'U' => 0,
-                'T' => 1,
-                'H' => 2,
-                'A' => 3,
-                'R' => 4,
-                'N' => 5,
-                'E' => 6,
-                _ => 7,
+                'F' => 0,
+                'I' => 1,
+                'K' => 2,
+                'U' => 3,
+                'T' => 4,
+                'H' => 5,
+                _ => 6,
             };
             let s = if doubled {
                 GLYPHS[g][row].replace('█', "██")

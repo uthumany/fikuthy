@@ -2,8 +2,8 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import type { PersistedUiState } from '../types.js';
-export const defaultUiState: PersistedUiState = { version: 1, bannerMode: (['full', 'compact', 'minimal', 'hide'].includes(process.env.UTHARNESS_BANNER ?? '') ? process.env.UTHARNESS_BANNER : 'full') as PersistedUiState['bannerMode'], layoutMode: 'focus', theme: 'Utharness Carbon', draft: '', history: [], reducedMotion: false, unicode: process.env.UTHARNESS_ASCII !== '1', iconMode: (['nerd', 'unicode', 'ascii'].includes(process.env.UTHARNESS_ICONS ?? '') ? process.env.UTHARNESS_ICONS : (process.env.UTHARNESS_ASCII === '1' ? 'ascii' : 'unicode')) as PersistedUiState['iconMode'] };
-export function uiStatePath(env: NodeJS.ProcessEnv = process.env): string { return path.join(env.XDG_STATE_HOME ?? path.join(os.homedir(), '.local', 'state'), 'utharness', 'ui.json'); }
+export const defaultUiState: PersistedUiState = { version: 1, bannerMode: (['full', 'compact', 'minimal', 'hide'].includes(process.env.FIKUTHY_BANNER ?? '') ? process.env.FIKUTHY_BANNER : 'full') as PersistedUiState['bannerMode'], layoutMode: 'focus', theme: 'Fikuthy Carbon', draft: '', history: [], reducedMotion: false, unicode: process.env.FIKUTHY_ASCII !== '1', iconMode: (['nerd', 'unicode', 'ascii'].includes(process.env.FIKUTHY_ICONS ?? '') ? process.env.FIKUTHY_ICONS : (process.env.FIKUTHY_ASCII === '1' ? 'ascii' : 'unicode')) as PersistedUiState['iconMode'] };
+export function uiStatePath(env: NodeJS.ProcessEnv = process.env): string { return path.join(env.XDG_STATE_HOME ?? path.join(os.homedir(), '.local', 'state'), 'fikuthy', 'ui.json'); }
 export function normalizeUiState(value: unknown): PersistedUiState {
   if (!value || typeof value !== 'object') return { ...defaultUiState };
   const input = value as Partial<PersistedUiState>;

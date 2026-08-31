@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPOSITORY="${UTHARNESS_REPOSITORY:-uthumany/utharnessly}"
-VERSION="${UTHARNESS_VERSION:-latest}"
-INSTALL_DIR="${UTHARNESS_INSTALL_DIR:-${HOME}/.local/bin}"
-BASE_URL="${UTHARNESS_RELEASE_BASE_URL:-https://github.com/${REPOSITORY}/releases}"
+REPOSITORY="${FIKUTHY_REPOSITORY:-fikuthy/fikuthy}"
+VERSION="${FIKUTHY_VERSION:-latest}"
+INSTALL_DIR="${FIKUTHY_INSTALL_DIR:-${HOME}/.local/bin}"
+BASE_URL="${FIKUTHY_RELEASE_BASE_URL:-https://github.com/${REPOSITORY}/releases}"
 
 usage() {
   cat <<'EOF'
-Install utharnessly from a published GitHub release archive.
+Install fikuthy from a published GitHub release archive.
 
 Environment:
-  UTHARNESS_VERSION       Release tag without or with v; default: latest
-  UTHARNESS_INSTALL_DIR   Destination directory; default: ~/.local/bin
-  UTHARNESS_REPOSITORY    GitHub owner/repository; default: uthumany/utharnessly
-  UTHARNESS_RELEASE_BASE_URL  Optional release root override for mirrors/tests
+  FIKUTHY_VERSION       Release tag without or with v; default: latest
+  FIKUTHY_INSTALL_DIR   Destination directory; default: ~/.local/bin
+  FIKUTHY_REPOSITORY    GitHub owner/repository; default: fikuthy/fikuthy
+  FIKUTHY_RELEASE_BASE_URL  Optional release root override for mirrors/tests
 EOF
 }
 
@@ -66,19 +66,19 @@ else
   release_url="${BASE_URL}/download/v${VERSION}"
   version_label="v${VERSION}"
 fi
-asset="utharnessly-${platform}-${arch}.tar.gz"
+asset="fikuthy-${platform}-${arch}.tar.gz"
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 archive="${tmpdir}/${asset}"
 checksums="${tmpdir}/SHA256SUMS"
 
-printf 'Downloading utharnessly %s (%s/%s)…\n' "$version_label" "$platform" "$arch"
+printf 'Downloading fikuthy %s (%s/%s)…\n' "$version_label" "$platform" "$arch"
 if ! curl --fail --location --silent --show-error "${release_url}/${asset}" --output "$archive"; then
   cat >&2 <<EOF
 No matching release archive was found.
 The public repository may not have published this target yet. Build from source:
   git clone https://github.com/${REPOSITORY}.git
-  cd utharnessly
+  cd fikuthy
   cargo build --release
   pnpm --dir ui install && pnpm --dir ui build
 EOF
@@ -95,21 +95,21 @@ actual="$(checksum "$archive")"
 
 mkdir -p "$INSTALL_DIR"
 tar -xzf "$archive" -C "$tmpdir"
-package_dir="$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d -name 'utharnessly-*' -print -quit)"
-[[ -n "$package_dir" ]] || { echo "release archive has no utharnessly directory" >&2; exit 1; }
-[[ -x "${package_dir}/utharness" ]] || { echo "release archive has no executable utharness binary" >&2; exit 1; }
+package_dir="$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d -name 'fikuthy-*' -print -quit)"
+[[ -n "$package_dir" ]] || { echo "release archive has no fikuthy directory" >&2; exit 1; }
+[[ -x "${package_dir}/fikuthy" ]] || { echo "release archive has no executable fikuthy binary" >&2; exit 1; }
 [[ -s "${package_dir}/ui/dist/index.js" ]] || { echo "release archive has no built terminal UI bundle" >&2; exit 1; }
-rm -rf "${INSTALL_DIR}/utharnessly-ui"
-install -m 0755 "${package_dir}/utharness" "${INSTALL_DIR}/utharness"
-ln -sfn utharness "${INSTALL_DIR}/utharnessly"
-mkdir -p "${INSTALL_DIR}/utharnessly-ui"
-cp -R "${package_dir}/ui/." "${INSTALL_DIR}/utharnessly-ui/"
-installed_version="$(${INSTALL_DIR}/utharness --version)"
-[[ "$installed_version" == utharness\ * ]] || { echo "installed binary failed its version health check" >&2; exit 1; }
+rm -rf "${INSTALL_DIR}/fikuthy-ui"
+install -m 0755 "${package_dir}/fikuthy" "${INSTALL_DIR}/fikuthy"
+ln -sfn fikuthy "${INSTALL_DIR}/fikuthy"
+mkdir -p "${INSTALL_DIR}/fikuthy-ui"
+cp -R "${package_dir}/ui/." "${INSTALL_DIR}/fikuthy-ui/"
+installed_version="$(${INSTALL_DIR}/fikuthy --version)"
+[[ "$installed_version" == fikuthy\ * ]] || { echo "installed binary failed its version health check" >&2; exit 1; }
 
 cat <<EOF
-Installed utharnessly to ${INSTALL_DIR}/utharness.
-The UI bundle is in ${INSTALL_DIR}/utharnessly-ui.
+Installed fikuthy to ${INSTALL_DIR}/fikuthy.
+The UI bundle is in ${INSTALL_DIR}/fikuthy-ui.
 Verified ${installed_version} with Node $(node --version).
-Ensure ${INSTALL_DIR} is on PATH, then run: utharnessly
+Ensure ${INSTALL_DIR} is on PATH, then run: fikuthy
 EOF

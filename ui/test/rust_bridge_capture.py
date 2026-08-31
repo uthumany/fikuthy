@@ -9,7 +9,7 @@ import shutil
 import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BIN = os.path.join(ROOT, "target", "release", "utharness")
+BIN = os.path.join(ROOT, "target", "release", "fikuthy")
 
 def set_size(fd):
     fcntl.ioctl(fd, termios.TIOCSWINSZ, struct.pack("HHHH", 36, 120, 0, 0))
@@ -17,7 +17,7 @@ def set_size(fd):
 pid, fd = pty.fork()
 if pid == 0:
     env = os.environ.copy()
-    env.update({"TERM": "xterm-256color", "COLORTERM": "truecolor", "UTHARNESS_COLOR": "truecolor", "UTHARNESS_UI_ENTRY": os.path.join(ROOT, "ui", "dist", "index.js")})
+    env.update({"TERM": "xterm-256color", "COLORTERM": "truecolor", "FIKUTHY_COLOR": "truecolor", "FIKUTHY_UI_ENTRY": os.path.join(ROOT, "ui", "dist", "index.js")})
     os.execve(BIN, [BIN, "tui"], env)
 set_size(fd)
 time.sleep(1.8)
@@ -39,8 +39,8 @@ except ChildProcessError:
     pass
 text = data.decode("utf-8", errors="replace")
 plain_ansi = re.sub(r"\x1b\[[0-9;?]*[ -/]*[@-~]", "", text)
-print("ink marker:", "UTHARNESS AGENT — focus mode" in plain_ansi)
-print("ascii marker:", "UTHARNESS" in plain_ansi)
+print("ink marker:", "FIKUTHY AGENT — focus mode" in plain_ansi)
+print("ascii marker:", "FIKUTHY" in plain_ansi)
 print("prompt marker:", "Type your message" in plain_ansi or "Type a message" in plain_ansi)
 print("exit status:", exit_code)
 print("exit marker:", exit_code == 0)

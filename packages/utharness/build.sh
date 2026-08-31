@@ -4,12 +4,12 @@ set -euo pipefail
 # This script supports standalone CI/local package assembly. When sourced by the
 # official termux-packages framework, the TERMUX_PKG_* variables below are also
 # available for downstream integration.
-TERMUX_PKG_HOMEPAGE="https://github.com/uthumany/utharnessly"
+TERMUX_PKG_HOMEPAGE="https://github.com/fikuthy/fikuthy"
 TERMUX_PKG_DESCRIPTION="Local-first autonomous AI agent terminal and TUI for Termux"
 TERMUX_PKG_LICENSE="MIT"
-TERMUX_PKG_MAINTAINER="UTHARNESS Contributors"
-TERMUX_PKG_VERSION="${TERMUX_PKG_VERSION:-${UTHARNESS_VERSION:-0.2.13}}"
-TERMUX_PKG_SRCURL="https://github.com/uthumany/utharnessly/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz"
+TERMUX_PKG_MAINTAINER="FIKUTHY Contributors"
+TERMUX_PKG_VERSION="${TERMUX_PKG_VERSION:-${FIKUTHY_VERSION:-0.2.13}}"
+TERMUX_PKG_SRCURL="https://github.com/fikuthy/fikuthy/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz"
 TERMUX_PKG_DEPENDS="nodejs-lts, ca-certificates, openssl, termux-tools"
 TERMUX_PKG_SUGGESTS="termux-api, git, openssh, python"
 
@@ -18,7 +18,7 @@ OUT_DIR="${TERMUX_PACKAGE_OUT:-$ROOT/dist/termux}"
 WORK_DIR="${TERMUX_PACKAGE_WORK:-$OUT_DIR/work}"
 STAGE="$WORK_DIR/stage"
 PREFIX_ROOT="${TERMUX_PREFIX:-data/data/com.termux/files/usr}"
-RUST_BINARY="${TERMUX_RUST_BINARY:-$ROOT/target/release/utharness}"
+RUST_BINARY="${TERMUX_RUST_BINARY:-$ROOT/target/release/fikuthy}"
 UI_DIST="${TERMUX_UI_DIST:-$ROOT/ui/dist}"
 ARCH="${TERMUX_ARCH:-}"
 
@@ -45,16 +45,16 @@ if [[ ! -f "$UI_DIST/index.js" ]]; then
 fi
 
 rm -rf "$STAGE"
-mkdir -p "$OUT_DIR" "$STAGE/$PREFIX_ROOT/bin" "$STAGE/$PREFIX_ROOT/lib/utharness" "$STAGE/$PREFIX_ROOT/share/utharness" "$STAGE/DEBIAN"
-install -Dm755 "$RUST_BINARY" "$STAGE/$PREFIX_ROOT/bin/utharness"
-cp -R "$UI_DIST" "$STAGE/$PREFIX_ROOT/lib/utharness/dist"
-install -Dm644 "$ROOT/ui/package.json" "$STAGE/$PREFIX_ROOT/lib/utharness/package.json"
-install -Dm644 "$ROOT/LICENSE" "$STAGE/$PREFIX_ROOT/share/utharness/LICENSE"
-install -Dm644 "$ROOT/README.md" "$STAGE/$PREFIX_ROOT/share/utharness/README.md"
-install -Dm644 "$ROOT/termux/environment.sh" "$STAGE/$PREFIX_ROOT/share/utharness/environment.sh"
+mkdir -p "$OUT_DIR" "$STAGE/$PREFIX_ROOT/bin" "$STAGE/$PREFIX_ROOT/lib/fikuthy" "$STAGE/$PREFIX_ROOT/share/fikuthy" "$STAGE/DEBIAN"
+install -Dm755 "$RUST_BINARY" "$STAGE/$PREFIX_ROOT/bin/fikuthy"
+cp -R "$UI_DIST" "$STAGE/$PREFIX_ROOT/lib/fikuthy/dist"
+install -Dm644 "$ROOT/ui/package.json" "$STAGE/$PREFIX_ROOT/lib/fikuthy/package.json"
+install -Dm644 "$ROOT/LICENSE" "$STAGE/$PREFIX_ROOT/share/fikuthy/LICENSE"
+install -Dm644 "$ROOT/README.md" "$STAGE/$PREFIX_ROOT/share/fikuthy/README.md"
+install -Dm644 "$ROOT/termux/environment.sh" "$STAGE/$PREFIX_ROOT/share/fikuthy/environment.sh"
 
 cat > "$STAGE/DEBIAN/control" <<CONTROL
-Package: utharness
+Package: fikuthy
 Version: $TERMUX_PKG_VERSION
 Section: misc
 Priority: optional
@@ -64,14 +64,14 @@ Depends: $TERMUX_PKG_DEPENDS
 Suggests: $TERMUX_PKG_SUGGESTS
 Homepage: $TERMUX_PKG_HOMEPAGE
 Description: $TERMUX_PKG_DESCRIPTION
- UTHARNESS runs a local-first Rust agent runtime with an Ink terminal UI.
+ FIKUTHY runs a local-first Rust agent runtime with an Ink terminal UI.
  It stores user state only below the Termux home directory and never requires root.
 CONTROL
 
 install -Dm755 "$ROOT/termux/postinst" "$STAGE/DEBIAN/postinst"
 install -Dm755 "$ROOT/termux/prerm" "$STAGE/DEBIAN/prerm"
 
-PACKAGE="$OUT_DIR/utharness_${TERMUX_PKG_VERSION}_${ARCH}.deb"
+PACKAGE="$OUT_DIR/fikuthy_${TERMUX_PKG_VERSION}_${ARCH}.deb"
 dpkg-deb --root-owner-group --build "$STAGE" "$PACKAGE" >/dev/null
 sha256sum "$PACKAGE" > "$PACKAGE.sha256"
 printf '%s\n' "$PACKAGE"

@@ -1,0 +1,30 @@
+[package]
+name = "fikuthy-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "fikuthy"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+crossterm.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+reqwest.workspace = true
+rusqlite.workspace = true
+sha2.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+uuid.workspace = true
+wait-timeout.workspace = true
+fikuthy-core = { path = "../fikuthy-core" }
+fikuthy-security = { path = "../fikuthy-security" }
+fikuthy-provider = { path = "../fikuthy-provider" }
+fikuthy-storage = { path = "../fikuthy-storage" }
+
+[dev-dependencies]
+tempfile.workspace = true

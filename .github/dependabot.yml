@@ -15,7 +15,7 @@ updates:
       ui-dependencies:
         patterns: ["*"]
   - package-ecosystem: pip
-    directory: /python/utharnessly
+    directory: /python/fikuthy
     schedule:
       interval: weekly
   - package-ecosystem: github-actions

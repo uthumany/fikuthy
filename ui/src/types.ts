@@ -4,7 +4,7 @@ export type BannerMode = 'full' | 'compact' | 'minimal' | 'hide';
 export type IconMode = 'nerd' | 'unicode' | 'ascii';
 export type LayoutMode = 'focus' | 'workspace';
 export type OverlayKind = 'commands' | 'models' | 'files' | 'agents' | 'tasks' | 'memory' | 'jobs' | 'logs' | 'help' | 'context' | null;
-export type Role = 'utharness' | 'you' | 'system' | 'agent' | 'tool' | 'memory' | 'error';
+export type Role = 'fikuthy' | 'you' | 'system' | 'agent' | 'tool' | 'memory' | 'error';
 export type ToolState = 'waiting' | 'running' | 'completed' | 'error' | 'approval';
 export type ToolKind = 'PLAN' | 'READ' | 'WRITE' | 'EDIT' | 'DIFF' | 'SHELL' | 'TEST' | 'BUILD' | 'GIT' | 'BROWSER' | 'SEARCH' | 'HTTP' | 'AGENT' | 'SKILL' | 'MCP' | 'MEMORY' | 'ERROR';
 

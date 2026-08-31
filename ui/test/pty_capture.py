@@ -23,7 +23,7 @@ def capture(cols, rows, label, keys=b"", arguments=None, settle=2.2, wait_for=No
     if pid == 0:
         env = os.environ.copy()
         env.pop("NO_COLOR", None)
-        env.update({"TERM": "xterm-256color", "COLORTERM": "truecolor", "FORCE_COLOR": "3", "UTHARNESS_COLOR": "truecolor", "XDG_STATE_HOME": tempfile.mkdtemp(prefix="utharness-capture-")})
+        env.update({"TERM": "xterm-256color", "COLORTERM": "truecolor", "FORCE_COLOR": "3", "FIKUTHY_COLOR": "truecolor", "XDG_STATE_HOME": tempfile.mkdtemp(prefix="fikuthy-capture-")})
         node = shutil.which("node") or "/usr/bin/env"
         extra = arguments or []
         argv = (["node", BIN] if node != "/usr/bin/env" else ["env", "node", BIN]) + extra
@@ -81,7 +81,7 @@ def capture(cols, rows, label, keys=b"", arguments=None, settle=2.2, wait_for=No
         handle.write(data)
 
 
-mode = os.environ.get("UTHARNESS_CAPTURE", "all")
+mode = os.environ.get("FIKUTHY_CAPTURE", "all")
 if mode in ("all", "main"):
     for cols, rows in [(20, 12), (30, 15), (40, 18), (60, 24), (80, 28), (100, 32), (120, 40), (160, 50), (200, 55)]:
         capture(cols, rows, "focus")

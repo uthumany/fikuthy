@@ -1,25 +1,25 @@
-# utharnessly v0.1.0 release report
+# fikuthy v0.1.0 release report
 
 ## Release identity
 
 | Field | Verified value |
 |---|---|
-| Repository | [`uthumany/utharnessly`][1] |
+| Repository | [`fikuthy/fikuthy`][1] |
 | Release | [`v0.1.0`][2] |
 | Git commit | `5771be7f5917f90d27898a1cd24768840c96384f` |
 | Git tag | `v0.1.0` (annotated, pushed to origin) |
-| npm package | [`utharnessly@0.1.0`][3] |
-| PyPI package | [`utharnessly==0.1.0`][4] |
+| npm package | [`fikuthy@0.1.0`][3] |
+| PyPI package | [`fikuthy==0.1.0`][4] |
 | Native release assets | Linux x64, macOS x64, Windows x64, plus `SHA256SUMS` |
 | Release workflow | GitHub Actions run `33021732796`, success |
 
-The tag points at the verified release-preparation commit. The `main` branch is synchronized with `origin/main`, and the working tree was clean after publishing and live-install verification. The repository rename from the former `utharness-runtime` identity preserved history and the old GitHub URL continues to redirect.
+The tag points at the verified release-preparation commit. The `main` branch is synchronized with `origin/main`, and the working tree was clean after publishing and live-install verification. The repository rename from the former `fikuthy-runtime` identity preserved history and the old GitHub URL continues to redirect.
 
 ## Published distribution paths
 
-The GitHub Release contains `utharnessly-linux-x64.tar.gz`, `utharnessly-macos-x64.tar.gz`, `utharnessly-windows-x64.zip`, and `SHA256SUMS`. The POSIX and PowerShell installers verify the checksum when the checksum asset is available. The npm and PyPI packages are thin, dependency-free launchers: they download the matching archive on first use, verify its checksum, cache the runtime and bundled Ink UI, and forward arguments to the native `utharness` binary.
+The GitHub Release contains `fikuthy-linux-x64.tar.gz`, `fikuthy-macos-x64.tar.gz`, `fikuthy-windows-x64.zip`, and `SHA256SUMS`. The POSIX and PowerShell installers verify the checksum when the checksum asset is available. The npm and PyPI packages are thin, dependency-free launchers: they download the matching archive on first use, verify its checksum, cache the runtime and bundled Ink UI, and forward arguments to the native `fikuthy` binary.
 
-Both registries expose `utharness` and `utharnessly` entry points. The launchers also support `--help`, `--version`, `update`, and explicit uninstall guidance. Unsupported operating-system and architecture combinations fail with source-build or remote-host guidance rather than attempting an incompatible download.
+Both registries expose `fikuthy` and `fikuthy` entry points. The launchers also support `--help`, `--version`, `update`, and explicit uninstall guidance. Unsupported operating-system and architecture combinations fail with source-build or remote-host guidance rather than attempting an incompatible download.
 
 ## Validation completed
 
@@ -28,13 +28,13 @@ Both registries expose `utharness` and `utharnessly` entry points. The launchers
 | Fresh Rust dependency/build path | Passed: `cargo fmt --all -- --check`, strict Clippy, workspace tests, and `cargo build --release` |
 | Fresh UI dependency/build path | Passed: frozen pnpm install, TypeScript type-check, UI tests, production build |
 | UI/TUI rendering | Passed: PTY capture and screenshot matrix at 40, 60, 80, 120, 160, and 220 columns, including short-height layouts |
-| CLI entry points | Passed: `utharness --help`, `utharness --version`, default startup, `tui --headless`, `init`, `chat`, `config show`, `doctor`, `providers`, `skills`, `agents`, and `tools` |
-| Persistence workflows | Passed: sessions, offline chat persistence, memory add/search, checkpoint creation, isolated `UTHARNESS_HOME`, and database diagnostics |
+| CLI entry points | Passed: `fikuthy --help`, `fikuthy --version`, default startup, `tui --headless`, `init`, `chat`, `config show`, `doctor`, `providers`, `skills`, `agents`, and `tools` |
+| Persistence workflows | Passed: sessions, offline chat persistence, memory add/search, checkpoint creation, isolated `FIKUTHY_HOME`, and database diagnostics |
 | Safety/error behavior | Passed: SAFE shell denial, destructive-command denylist rejection, offline provider-missing behavior, and explicit unsupported-architecture errors |
 | npm artifact | Passed: syntax check, `npm pack --dry-run`, clean local install, real registry install, npx, pnpm dlx, cache download, update, uninstall guidance, and reinstall |
 | PyPI artifacts | Passed: Python unit tests, source distribution, wheel, strict Twine checks, clean venv install, real registry install, update, uninstall guidance, and reinstall |
 | Release archives | Passed: all three live assets downloaded and verified against `SHA256SUMS`; archives contain the native binary and `ui/dist/index.js` |
-| POSIX installer | Passed: local fixture and live GitHub Release installation; installed binary reports `utharness 0.1.0` and bundled UI is present |
+| POSIX installer | Passed: local fixture and live GitHub Release installation; installed binary reports `fikuthy 0.1.0` and bundled UI is present |
 | Hosted CI | Passed: CI run `33021478397` and Security run `33021478578` |
 | Hosted release | Passed: Release run `33021732796` built and uploaded all release assets |
 
@@ -72,7 +72,7 @@ The release does not publish ARM64 archives, native Android/iOS/iPadOS artifacts
 
 The Rust launcher starts the bundled Ink UI with Node.js on supported release targets. A complete TUI source build therefore requires Node.js 22 or newer and the repository-pinned pnpm version. Package launchers require Node.js 18+ for the npm launcher or Python 3.9+ for the PyPI launcher, while the downloaded native archive remains limited to the published host targets above.
 
-[1]: https://github.com/uthumany/utharnessly "utharnessly repository"
-[2]: https://github.com/uthumany/utharnessly/releases/tag/v0.1.0 "utharnessly v0.1.0 release"
-[3]: https://www.npmjs.com/package/utharnessly "utharnessly on npm"
-[4]: https://pypi.org/project/utharnessly/0.1.0/ "utharnessly 0.1.0 on PyPI"
+[1]: https://github.com/fikuthy/fikuthy "fikuthy repository"
+[2]: https://github.com/fikuthy/fikuthy/releases/tag/v0.1.0 "fikuthy v0.1.0 release"
+[3]: https://www.npmjs.com/package/fikuthy "fikuthy on npm"
+[4]: https://pypi.org/project/fikuthy/0.1.0/ "fikuthy 0.1.0 on PyPI"

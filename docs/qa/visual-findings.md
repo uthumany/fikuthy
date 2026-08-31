@@ -4,7 +4,7 @@ Date: 2026-08-27
 
 ## Compact 40x18
 
-The compact TUI keeps the UTHARNESS identity, focus-mode header, prompt, and bottom status visible. Content is reduced to short rows and the composer remains usable. The compact screenshot shows deliberate truncation of long secondary text rather than horizontal overflow. The top banner is rendered as compact text rather than the full large logo.
+The compact TUI keeps the FIKUTHY identity, focus-mode header, prompt, and bottom status visible. Content is reduced to short rows and the composer remains usable. The compact screenshot shows deliberate truncation of long secondary text rather than horizontal overflow. The top banner is rendered as compact text rather than the full large logo.
 
 ## Wide 120x36
 

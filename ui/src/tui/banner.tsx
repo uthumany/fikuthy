@@ -7,18 +7,18 @@ export type BannerTier = 'full' | 'compressed' | 'wrapped' | 'compact' | 'minima
 
 export const letterColors = ['#B44CFF', '#20D6F4', '#55DB24', '#FFD21F', '#FF8A16', '#FF3D4F', '#3478F6', '#B44CFF', '#B44CFF'] as const;
 const glyphs: Record<string, string[]> = {
-  U: ['█ █', '█ █', '█ █', '█ █', '███'], T: ['███', ' █ ', ' █ ', ' █ ', ' █ '],
-  H: ['█ █', '█ █', '███', '█ █', '█ █'], A: [' █ ', '█ █', '███', '█ █', '█ █'],
-  R: ['██ ', '█ █', '██ ', '█ █', '█ █'], N: ['█ █', '███', '███', '█ █', '█ █'],
-  E: ['███', '█  ', '██ ', '█  ', '███'], S: [' ██', '█  ', ' █ ', '  █', '██ ']
+  F: ['███', '█  ', '██ ', '█  ', '█  '], I: ['███', ' █ ', ' █ ', ' █ ', '███'],
+  K: ['█ █', '██ ', '█  ', '██ ', '█ █'], U: ['█ █', '█ █', '█ █', '█ █', '███'],
+  T: ['███', ' █ ', ' █ ', ' █ ', ' █ '], H: ['█ █', '█ █', '███', '█ █', '█ █'],
+  Y: ['█ █', '█ █', ' █ ', ' █ ', ' █ ']
 };
-const word = [...'UTHARNESS'];
+const word = [...'FIKUTHY'];
 
 export function detectTerminalCapabilities(env: NodeJS.ProcessEnv = process.env) {
   const term = env.TERM ?? '';
   return {
-    unicode: env.UTHARNESS_ASCII !== '1' && term !== 'dumb',
-    nerdFonts: env.UTHARNESS_ICONS === 'nerd' || env.NERD_FONT === '1',
+    unicode: env.FIKUTHY_ASCII !== '1' && term !== 'dumb',
+    nerdFonts: env.FIKUTHY_ICONS === 'nerd' || env.NERD_FONT === '1',
     color: !env.NO_COLOR && term !== 'dumb'
   };
 }
@@ -81,7 +81,7 @@ export function ResponsiveBanner({ width, rows, mode, colorMode, iconMode }: { w
   if (tier === 'hide') return null;
   const icons = resolveIconMode(iconMode);
   if (tier === 'minimal') return <Box justifyContent="space-between"><Text bold>{word.map((letter, index) => <Text key={`${letter}-${index}`} color={tone(letterColors[index]!, colorMode)}>{letter}</Text>)} <Text color={tone(letterColors[2], colorMode)}>&gt;_</Text></Text><Text dimColor>F1 help</Text></Box>;
-  if (tier === 'compact') return <Box flexDirection="column"><Text color={tone(letterColors[0], colorMode)}>┌─ <Text bold>UTHARNESS</Text> &gt;_ ─┐</Text><StatusBlocks tier={tier} colorMode={colorMode} icons={icons} /><Text dimColor>AUTONOMOUS AGENT HARNESS</Text></Box>;
+  if (tier === 'compact') return <Box flexDirection="column"><Text color={tone(letterColors[0], colorMode)}>┌─ <Text bold>FIKUTHY</Text> &gt;_ ─┐</Text><StatusBlocks tier={tier} colorMode={colorMode} icons={icons} /><Text dimColor>AUTONOMOUS AGENT HARNESS</Text></Box>;
   const separator = '╌'.repeat(Math.max(20, Math.min(width - 2, tier === 'full' ? 104 : 82)));
   return <Box flexDirection="column">
     <Text dimColor>{separator}</Text>

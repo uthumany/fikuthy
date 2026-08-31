@@ -1,0 +1,40 @@
+{
+  "name": "fikuthy",
+  "version": "0.2.13",
+  "description": "Cross-platform launcher for the fikuthy local-first agent terminal",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "fikuthy": "bin/fikuthy.js",
+    "fikuthy": "bin/fikuthy.js"
+  },
+  "files": [
+    "bin/fikuthy.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fikuthy/fikuthy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fikuthy/fikuthy/issues"
+  },
+  "homepage": "https://github.com/fikuthy/fikuthy",
+  "keywords": [
+    "cli",
+    "terminal",
+    "agent",
+    "rust",
+    "ink",
+    "tui"
+  ],
+  "scripts": {
+    "check": "node --check bin/fikuthy.js",
+    "pack:check": "npm pack --dry-run"
+  }
+}

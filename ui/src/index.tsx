@@ -6,12 +6,12 @@ import { App } from './app.js';
 import { SetupApp } from './setup.js';
 
 process.on('uncaughtException', error => {
-  process.stderr.write(`${chalk.red('utharness-ui:')} ${error.message}\n`);
+  process.stderr.write(`${chalk.red('fikuthy-ui:')} ${error.message}\n`);
   process.exitCode = 1;
 });
 
 process.on('unhandledRejection', reason => {
-  process.stderr.write(`${chalk.red('utharness-ui:')} ${String(reason)}\n`);
+  process.stderr.write(`${chalk.red('fikuthy-ui:')} ${String(reason)}\n`);
   process.exitCode = 1;
 });
 

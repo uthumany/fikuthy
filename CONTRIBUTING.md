@@ -1,6 +1,6 @@
-# Contributing to Utharness
+# Contributing to Fikuthy
 
-Utharness is a safety-sensitive local agent runtime. Changes should preserve the product boundary: the CLI remains native, local by default, observable, and permissioned. Avoid adding provider-specific logic to the core domain or bypassing the security layer for convenience.
+Fikuthy is a safety-sensitive local agent runtime. Changes should preserve the product boundary: the CLI remains native, local by default, observable, and permissioned. Avoid adding provider-specific logic to the core domain or bypassing the security layer for convenience.
 
 Before opening a pull request, run:
 

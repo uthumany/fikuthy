@@ -1,6 +1,6 @@
-# UTHARNESS Skill Engine
+# FIKUTHY Skill Engine
 
-The UTHARNESS Skill Engine turns procedural agent capabilities into searchable, reviewable, and lazily installable registry records. It keeps a lightweight SQLite/FTS catalog locally, installs selected skills under an isolated UTHARNESS-managed directory, records health and quarantine state, and refuses to execute arbitrary imported code without a reviewed adapter.
+The FIKUTHY Skill Engine turns procedural agent capabilities into searchable, reviewable, and lazily installable registry records. It keeps a lightweight SQLite/FTS catalog locally, installs selected skills under an isolated FIKUTHY-managed directory, records health and quarantine state, and refuses to execute arbitrary imported code without a reviewed adapter.
 
 > **Design rule:** A catalog record is not proof that a skill is executable. Imported skills preserve unknown runtime, dependencies, commands, permissions, and entrypoints until those fields are declared or verified.
 
@@ -8,28 +8,28 @@ The UTHARNESS Skill Engine turns procedural agent capabilities into searchable, 
 
 ```bash
 # List the built-in registry
-utharness skills
+fikuthy skills
 
 # Search normalized metadata
-utharness skills search testing
+fikuthy skills search testing
 
 # Inspect the complete manifest for one skill
-utharness skills info builtin.git-status
+fikuthy skills info builtin.git-status
 
 # Install a built-in skill lazily, test it, and run it
-utharness skills install builtin.git-status
-utharness skills test builtin.git-status
-utharness skills run builtin.git-status
+fikuthy skills install builtin.git-status
+fikuthy skills test builtin.git-status
+fikuthy skills run builtin.git-status
 
 # Remove it; the prior installation is retained in quarantine for rollback inspection
-utharness skills remove builtin.git-status
+fikuthy skills remove builtin.git-status
 
 # Restore the newest quarantined installation if the replacement needs to be reverted
-utharness skills rollback builtin.git-status
+fikuthy skills rollback builtin.git-status
 
 # Check registry health and list categories
-utharness skills doctor
-utharness skills categories
+fikuthy skills doctor
+fikuthy skills categories
 ```
 
 The interactive Ink UI exposes the same registry through `/skills` and `/skills search <query>`. `Ctrl+S` opens the Skill Manager overlay. The overlay reports indexed records, health, install state, and the review-gated behavior of external skills.
@@ -90,7 +90,7 @@ The registry stores the serialized manifest plus indexed columns for name, descr
 The VoltAgent repository is a curated Markdown catalog of 1,000-plus skills from official development teams and the community. The adapter reads the public README, captures Markdown links and descriptions, preserves the link as provenance, tracks the current catalog group, and imports a bounded page of records. Fields that the catalog does not state remain `unknown` rather than being inferred as runnable commands or permissions.[1]
 
 ```bash
-utharness skills sync --source voltagent --limit 500
+fikuthy skills sync --source voltagent --limit 500
 ```
 
 ### skills.sh
@@ -99,13 +99,13 @@ The public skills.sh documentation describes a paginated JSON API under `https:/
 
 ```bash
 # Bounded sync; safe for local development
-utharness skills sync --source skills.sh --limit 500
+fikuthy skills sync --source skills.sh --limit 500
 
 # Full synchronization is intentionally explicit and should be scheduled outside the interactive CLI
-SKILLS_SH_TOKEN="$TOKEN" utharness skills sync --source skills.sh --limit 100000
+SKILLS_SH_TOKEN="$TOKEN" fikuthy skills sync --source skills.sh --limit 100000
 ```
 
-The current public web catalog presents an install convention based on `npx skills add <owner/repo>` and lists integrations for many agent clients, including Claude Code, Cursor, Codex, GitHub Copilot, Windsurf, Gemini, Cline, OpenCode, VS Code, and Zed.[3] UTHARNESS preserves this as an install hint, but it does not treat another client’s procedural skill as a trusted executable.
+The current public web catalog presents an install convention based on `npx skills add <owner/repo>` and lists integrations for many agent clients, including Claude Code, Cursor, Codex, GitHub Copilot, Windsurf, Gemini, Cline, OpenCode, VS Code, and Zed.[3] FIKUTHY preserves this as an install hint, but it does not treat another client’s procedural skill as a trusted executable.
 
 ## Lazy installation and execution lifecycle
 
@@ -114,20 +114,20 @@ The lifecycle is deliberately staged:
 1. **Discover.** Search the local SQLite/FTS registry or synchronize a bounded source page.
 2. **Rank.** Combine text relevance with source, category, runtime, and local state. Autonomous planning includes the top local candidates in its planning context.
 3. **Inspect.** Read the complete normalized manifest and review source provenance, permissions, runtime, dependencies, and health.
-4. **Install.** Write the manifest and documentation into the UTHARNESS-managed installation directory. Existing content is moved into quarantine before replacement, and declared content checksums are verified.
+4. **Install.** Write the manifest and documentation into the FIKUTHY-managed installation directory. Existing content is moved into quarantine before replacement, and declared content checksums are verified.
 5. **Test.** Re-evaluate operating-system, architecture, runtime, command, permission, and dependency compatibility.
-6. **Activate.** Built-in skills use explicit UTHARNESS adapters. Imported skills remain metadata-only unless a reviewed adapter is available and the user explicitly permits external installation/execution.
+6. **Activate.** Built-in skills use explicit FIKUTHY adapters. Imported skills remain metadata-only unless a reviewed adapter is available and the user explicitly permits external installation/execution.
 7. **Unload.** Removal moves the active installation to a timestamped quarantine directory, allowing inspection or later rollback cleanup.
 
 No imported shell command is executed merely because it appears in a manifest. Skills with unsafe permissions such as `system.root` or `credentials.export` are rejected by normalization. Dependency records are checked for duplicate names with conflicting pinned versions, and missing runtimes or commands produce explicit health states.
 
 ## Local and private skills
 
-Create a `utharness.skill.json` manifest using the normalized shape, then import it into the local registry:
+Create a `fikuthy.skill.json` manifest using the normalized shape, then import it into the local registry:
 
 ```bash
-utharness skills import ./utharness.skill.json
-utharness skills info local.example
+fikuthy skills import ./fikuthy.skill.json
+fikuthy skills info local.example
 ```
 
 This path is intended for workspace-owned, private, and internally reviewed skills. Importing a manifest does not execute its commands or install its dependencies.
@@ -137,7 +137,7 @@ This path is intended for workspace-owned, private, and internally reviewed skil
 | State | Meaning |
 |---|---|
 | `available` | Metadata is indexed but not installed. |
-| `installed` | Manifest and documentation are present in the UTHARNESS-managed directory. |
+| `installed` | Manifest and documentation are present in the FIKUTHY-managed directory. |
 | `healthy` | Declared platform, runtime, command, and permission checks pass for the current machine. |
 | `manual` | The skill has no trusted executable entrypoint and is treated as procedural content. |
 | `unknown` | The source did not publish enough data for compatibility verification. |

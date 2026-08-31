@@ -1,12 +1,12 @@
-# Copy to ~/.config/utharness/config.toml
+# Copy to ~/.config/fikuthy/config.toml
 workspace = "~/projects/example"
 permission_mode = "SAFE"
-theme = "utharness-carbon"
+theme = "fikuthy-carbon"
 provider = "offline"
 model = "offline-planner"
 
 [storage]
-# The default is ~/.local/share/utharness/utharness.db
+# The default is ~/.local/share/fikuthy/fikuthy.db
 durable_writes = false
 
 [providers.offline]

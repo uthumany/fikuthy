@@ -24,8 +24,8 @@ test('setup exposes only runtime-backed providers and capabilities', () => {
 });
 
 test('resolves native runtime paths for package and source layouts', () => {
-  assert.equal(runtimeBinary('/workspace', { UTHARNESS_RUNTIME_BIN: '/opt/utharness' }), '/opt/utharness');
-  assert.ok(runtimeBinary(process.cwd(), {}).endsWith(path.join('target', 'release', process.platform === 'win32' ? 'utharness.exe' : 'utharness')));
+  assert.equal(runtimeBinary('/workspace', { FIKUTHY_RUNTIME_BIN: '/opt/fikuthy' }), '/opt/fikuthy');
+  assert.ok(runtimeBinary(process.cwd(), {}).endsWith(path.join('target', 'release', process.platform === 'win32' ? 'fikuthy.exe' : 'fikuthy')));
 });
 
 test('maps required terminal width breakpoints', () => {
@@ -72,7 +72,7 @@ test('composer supports multiline and editing shortcuts', () => {
 });
 
 test('persists and restores safe UI preferences', async () => {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'utharness-ui-test-')); const file = path.join(directory, 'ui.json');
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'fikuthy-ui-test-')); const file = path.join(directory, 'ui.json');
   const state = normalizeUiState({ bannerMode: 'compact', layoutMode: 'workspace', draft: 'unsent', history: ['one'], unicode: false });
   await saveUiState(state, file); assert.deepEqual(await loadUiState(file), state); assert.equal(normalizeUiState({ bannerMode: 'invalid' }).bannerMode, 'full');
   await fs.rm(directory, { recursive: true, force: true });
@@ -92,5 +92,5 @@ test('detects Termux runtime metadata without requiring Android services', async
 
 test('loads a validated runtime snapshot with live telemetry', async () => {
   const snapshot = await loadSnapshot(process.cwd()); assert.ok(snapshot.workspace.length > 0); assert.equal(snapshot.messages.length, 1);
-  assert.equal(snapshot.messages[0]?.role, 'utharness'); assert.ok(snapshot.git.branch.length > 0); assert.ok(snapshot.platform.length > 0); assert.ok(snapshot.termuxApi.length > 0);
+  assert.equal(snapshot.messages[0]?.role, 'fikuthy'); assert.ok(snapshot.git.branch.length > 0); assert.ok(snapshot.platform.length > 0); assert.ok(snapshot.termuxApi.length > 0);
 });

@@ -335,6 +335,75 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "da7c62ceae207dd37ea5b845da6a0696c799f85e97da1ab5b7910be3c1c80223"
 
 [[package]]
+name = "fikuthy-cli"
+version = "0.2.13"
+dependencies = [
+ "anyhow",
+ "clap",
+ "crossterm",
+ "fikuthy-core",
+ "fikuthy-provider",
+ "fikuthy-security",
+ "fikuthy-storage",
+ "reqwest",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tempfile",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+ "wait-timeout",
+]
+
+[[package]]
+name = "fikuthy-core"
+version = "0.2.13"
+dependencies = [
+ "chrono",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "uuid",
+]
+
+[[package]]
+name = "fikuthy-provider"
+version = "0.2.13"
+dependencies = [
+ "anyhow",
+ "reqwest",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "fikuthy-security"
+version = "0.2.13"
+dependencies = [
+ "fikuthy-core",
+ "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
+name = "fikuthy-storage"
+version = "0.2.13"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "fikuthy-core",
+ "rusqlite",
+ "serde_json",
+ "tempfile",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "find-msvc-tools"
 version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1618,75 +1687,6 @@ name = "utf8parse"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06abde3611657adf66d383f00b093d7faecc7fa57071cce2578660c9f1010821"
-
-[[package]]
-name = "utharness-cli"
-version = "0.2.13"
-dependencies = [
- "anyhow",
- "clap",
- "crossterm",
- "reqwest",
- "rusqlite",
- "serde",
- "serde_json",
- "sha2",
- "tempfile",
- "tracing",
- "tracing-subscriber",
- "utharness-core",
- "utharness-provider",
- "utharness-security",
- "utharness-storage",
- "uuid",
- "wait-timeout",
-]
-
-[[package]]
-name = "utharness-core"
-version = "0.2.13"
-dependencies = [
- "chrono",
- "serde",
- "serde_json",
- "thiserror",
- "uuid",
-]
-
-[[package]]
-name = "utharness-provider"
-version = "0.2.13"
-dependencies = [
- "anyhow",
- "reqwest",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "utharness-security"
-version = "0.2.13"
-dependencies = [
- "regex",
- "serde",
- "serde_json",
- "tempfile",
- "utharness-core",
-]
-
-[[package]]
-name = "utharness-storage"
-version = "0.2.13"
-dependencies = [
- "anyhow",
- "chrono",
- "rusqlite",
- "serde_json",
- "tempfile",
- "tracing",
- "utharness-core",
- "uuid",
-]
 
 [[package]]
 name = "uuid"

@@ -7,9 +7,9 @@ export const palette = {
 } as const;
 export const bannerGradient = ['#FFD43B', '#FFBE55', '#FFA15A', '#FF8267', '#FF6B81'];
 export function getColorMode(env: NodeJS.ProcessEnv = process.env): ColorMode {
-  if (env.NO_COLOR || env.UTHARNESS_ASCII === '1') return 'mono';
-  if (env.UTHARNESS_COLOR === 'truecolor' || env.COLORTERM?.includes('truecolor')) return 'truecolor';
-  if (env.UTHARNESS_COLOR === 'ansi256' || env.TERM?.includes('256color')) return 'ansi256';
+  if (env.NO_COLOR || env.FIKUTHY_ASCII === '1') return 'mono';
+  if (env.FIKUTHY_COLOR === 'truecolor' || env.COLORTERM?.includes('truecolor')) return 'truecolor';
+  if (env.FIKUTHY_COLOR === 'ansi256' || env.TERM?.includes('256color')) return 'ansi256';
   return 'ansi16';
 }
 export function tone(color: string, mode: ColorMode): string | undefined { return mode === 'mono' ? undefined : color; }

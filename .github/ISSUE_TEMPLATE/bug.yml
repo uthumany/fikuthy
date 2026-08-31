@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible UTHARNESS defect
+description: Report a reproducible FIKUTHY defect
 title: "bug: "
 labels: [bug]
 body:
@@ -12,7 +12,7 @@ body:
   - type: input
     attributes:
       label: Version
-      placeholder: utharness 0.2.9
+      placeholder: fikuthy 0.2.9
     validations:
       required: true
   - type: textarea

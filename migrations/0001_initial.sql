@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     provider_id TEXT,
     model_id TEXT,
     cwd TEXT NOT NULL,
-    theme TEXT NOT NULL DEFAULT 'utharness-carbon',
+    theme TEXT NOT NULL DEFAULT 'fikuthy-carbon',
     draft_input TEXT NOT NULL DEFAULT '',
     scroll_offset INTEGER NOT NULL DEFAULT 0,
     created_at INTEGER NOT NULL,

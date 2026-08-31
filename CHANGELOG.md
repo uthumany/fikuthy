@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to utharnessly are documented here.
+All notable changes to fikuthy are documented here.
 
 ## [Unreleased]
 
@@ -14,7 +14,7 @@ All notable changes to utharnessly are documented here.
 
 ### Security
 
-- Setup-managed API keys are written atomically to `~/.utharness/secrets.env` with owner-only permissions on Unix and never appear in command arguments, project configuration, logs, or screenshots.
+- Setup-managed API keys are written atomically to `~/.fikuthy/secrets.env` with owner-only permissions on Unix and never appear in command arguments, project configuration, logs, or screenshots.
 - Secret variable names, custom provider URLs, imported configuration, and provider/model selections are validated before activation; insecure remote HTTP endpoints remain rejected.
 - PowerShell installation now fails closed when release checksums cannot be verified.
 
@@ -33,7 +33,7 @@ All notable changes to utharnessly are documented here.
 
 ### Added
 
-- Persistent reference-matched UTHARNESS banner in the native CLI and full-screen terminal UI, including the terminal prompt block, per-letter ANSI colors, navigation blocks, and tagline.
+- Persistent reference-matched FIKUTHY banner in the native CLI and full-screen terminal UI, including the terminal prompt block, per-letter ANSI colors, navigation blocks, and tagline.
 - Responsive full, compressed, wrapped, compact, and minimal layouts for terminals from 20 columns through ultrawide displays.
 - CLI flags and persistent settings for banner visibility, layout, and Nerd Font, Unicode, or ASCII icons.
 
@@ -50,8 +50,8 @@ All notable changes to utharnessly are documented here.
 
 ### Added
 
-- Responsive `utharness setup` wizard with Quick, Full, and Blank Slate modes, keyboard-driven provider and capability selectors, credential-presence reporting, and review-before-save behavior.
-- Validated `utharness.json` persistence for provider, model, permission mode, and enabled runtime capabilities, plus a scriptable `--non-interactive` setup path.
+- Responsive `fikuthy setup` wizard with Quick, Full, and Blank Slate modes, keyboard-driven provider and capability selectors, credential-presence reporting, and review-before-save behavior.
+- Validated `fikuthy.json` persistence for provider, model, permission mode, and enabled runtime capabilities, plus a scriptable `--non-interactive` setup path.
 - First-class NVIDIA NIM gateway using the official OpenAI-compatible hosted endpoint, `NVIDIA_API_KEY`, and a Nemotron default model.
 
 ### Security
@@ -68,7 +68,7 @@ All notable changes to utharnessly are documented here.
 ### Added
 
 - Provider-neutral OpenAI-compatible gateway for OpenRouter, OpenAI, Groq, Together, DeepSeek, Fireworks, Ollama, and custom endpoints.
-- Real-time SSE token streaming in `utharness chat`, provider health checks, environment setup output, and automatic provider selection from supported credential variables.
+- Real-time SSE token streaming in `fikuthy chat`, provider health checks, environment setup output, and automatic provider selection from supported credential variables.
 - Working `agents list` and `agents run` commands backed by the existing bounded SAFE inspection engine.
 - Local mock-gateway unit and process-level integration tests covering stream ordering, authorization, persistence, and secret-safe output.
 
@@ -81,7 +81,7 @@ All notable changes to utharnessly are documented here.
 
 - Release and Termux UI artifacts now bundle all Node runtime dependencies instead of importing packages from an unavailable `node_modules` directory.
 - Packaged UI directories include their ESM package metadata, eliminating Node's typeless-package warning after installation.
-- `utharness update` now recognizes release-archive installations and runs the checksum-verifying installer; other installations receive concrete npm, PyPI, uv, Cargo, or Termux update commands.
+- `fikuthy update` now recognizes release-archive installations and runs the checksum-verifying installer; other installations receive concrete npm, PyPI, uv, Cargo, or Termux update commands.
 
 ## [0.2.9] — 2026-08-29
 
@@ -106,13 +106,13 @@ All notable changes to utharnessly are documented here.
 
 - Termux-native command family: `termux info`, `termux setup`, `termux api`, `termux keys install`, `termux storage enable`, `termux permissions`, and `termux doctor`.
 - Android/Termux environment detection for architecture, `$PREFIX`, shell, terminal size/color, storage, optional Termux:API, Node, Python, Git, SSH, curl, OpenSSL, disk, RAM, DNS, and network status.
-- No-root Termux path contract using `$PREFIX/bin/utharness`, `$PREFIX/lib/utharness`, `$PREFIX/share/utharness`, `~/.config/utharness`, `~/.local/share/utharness`, and `~/.cache/utharness`.
+- No-root Termux path contract using `$PREFIX/bin/fikuthy`, `$PREFIX/lib/fikuthy`, `$PREFIX/share/fikuthy`, `~/.config/fikuthy`, `~/.local/share/fikuthy`, and `~/.cache/fikuthy`.
 - Debian package builder, package lifecycle scripts, signed APT metadata builder, repository bootstrap script, package checksums, and release workflow support for aarch64 and x86_64.
 - Termux mobile-first TUI breakpoint policy for under 50, 50–89, and 90+ columns with persistent branding and Termux navigation hints.
 
 ### Fixed
 
-- Synchronized Rust, UI, NPM, and Python release metadata to the coordinated 0.2.7 line; added a CLI regression test that compares `utharness --version` with the Cargo package version.
+- Synchronized Rust, UI, NPM, and Python release metadata to the coordinated 0.2.7 line; added a CLI regression test that compares `fikuthy --version` with the Cargo package version.
 - Corrected the live Termux bootstrap and repository-relative checksum verification paths in the release workflow and repository builder.
 
 ### Notes and limitations
@@ -124,7 +124,7 @@ The v0.2.7 Termux repository is live and has been verified from public Pages end
 ### Fixed
 
 - Synchronized Rust, UI, NPM, and Python release metadata and version reporting to 0.2.7.
-- Added a CLI regression test covering `utharness --version` against the Cargo package version.
+- Added a CLI regression test covering `fikuthy --version` against the Cargo package version.
 - Corrected Termux bootstrap exit behavior and repository-relative checksum generation.
 - Published and verified signed Termux packages for Android `aarch64` and `x86_64`, with live GitHub Pages metadata, checksums, and release assets.
 
@@ -138,12 +138,12 @@ The v0.2.7 Termux repository is live and has been verified from public Pages end
 
 ### Added
 
-- Public `utharnessly` repository identity with preserved Git history and canonical links.
+- Public `fikuthy` repository identity with preserved Git history and canonical links.
 - Native Rust workspace with focused core, storage, security, provider, and CLI crates.
 - SQLite WAL persistence with embedded migrations, sessions, messages, tasks, checkpoints, runtime events, tool calls, permission decisions, audit records, and FTS5 memory search.
 - SAFE default execution boundary with workspace scoping, destructive-command denial, output redaction, and explicit approval for shell execution.
 - Offline-first chat and bounded OpenRouter-compatible autonomous inspection using a SAFE read-only tool allowlist.
-- Responsive UTHY startup/banner system with layered logo depth, amber-to-orange-to-coral gradient treatment, wide/medium/compact ASCII variants, persistent uppercase UTHARNESS identity, onboarding tips, project warning state, version display, reduced-motion support, and limited-color fallback.
+- Responsive UTHY startup/banner system with layered logo depth, amber-to-orange-to-coral gradient treatment, wide/medium/compact ASCII variants, persistent uppercase FIKUTHY identity, onboarding tips, project warning state, version display, reduced-motion support, and limited-color fallback.
 - Complete React/Ink terminal UI replacement under `ui/`, using `@inkjs/ui`, `chalk`, `gradient-string`, `cli-spinners`, `figures`, `string-width`, `wrap-ansi`, `execa`, `chokidar`, and `zod`.
 - One left-aligned full-screen content grid with fixed header/banner/prompt/status chrome and a conversation-only scroll viewport. UTHY/YOU rows, timestamps, streaming tokens, running/completed tool cards, success/error/approval states, result summaries, and responsive wrapping are included.
 - Exact responsive terminal matrix for `40–59`, `60–79`, `80–119`, `120–199`, and `200+` columns, with short-height budgeting that keeps branding, prompt, and status visible.
@@ -151,7 +151,7 @@ The v0.2.7 Termux repository is live and has been verified from public Pages end
 - Rust CLI launch bridge that runs the built Ink bundle through Node 22 or falls back to `pnpm --dir ui dev` for source checkouts.
 - Linux x64, macOS x64, and Windows x64 release archives with bundled UI and SHA-256 checksums.
 - POSIX and PowerShell release installers with explicit unsupported-target and source-build fallback behavior.
-- npm package `utharnessly` and PyPI package `utharnessly`, each providing `utharness` and `utharnessly` launcher entry points with checksum-verified native runtime caching.
+- npm package `fikuthy` and PyPI package `fikuthy`, each providing `fikuthy` and `fikuthy` launcher entry points with checksum-verified native runtime caching.
 - UI unit tests, PTY screenshot matrix, Rust workspace tests, strict Clippy, release compilation, package builds, package installation simulations, and process-level Rust-to-Ink bridge smoke coverage.
 - Cross-platform CI, package validation, security auditing, and tag-triggered release automation.
 - Installation, platform, terminal, package-manager, troubleshooting, compatibility, and development documentation, with real screenshots under `docs/assets/screenshots/`.
@@ -162,7 +162,7 @@ Provider credentials are never committed or persisted by the runtime. The intera
 
 Published native release artifacts target Linux x64, macOS x64, and Windows x64; the v0.2.7 Termux release adds signed Android `aarch64` and `x86_64` packages. iOS/iPadOS, FreeBSD, desktop ARM variants, Homebrew, apt, Nix, winget, and other unlisted package ecosystems use source or remote-host guidance rather than fabricated product packages.
 
-[0.2.7]: https://github.com/uthumany/utharnessly/releases/tag/v0.2.7
-[0.2.9]: https://github.com/uthumany/utharnessly/releases/tag/v0.2.9
-[0.2.10]: https://github.com/uthumany/utharnessly/releases/tag/v0.2.10
-[0.1.0]: https://github.com/uthumany/utharnessly/releases/tag/v0.1.0
+[0.2.7]: https://github.com/fikuthy/fikuthy/releases/tag/v0.2.7
+[0.2.9]: https://github.com/fikuthy/fikuthy/releases/tag/v0.2.9
+[0.2.10]: https://github.com/fikuthy/fikuthy/releases/tag/v0.2.10
+[0.1.0]: https://github.com/fikuthy/fikuthy/releases/tag/v0.1.0

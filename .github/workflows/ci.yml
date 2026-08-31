@@ -57,22 +57,22 @@ jobs:
         with:
           node-version: 22
       - name: Validate npm package
-        working-directory: packages/utharnessly-npm
+        working-directory: packages/fikuthy-npm
         run: |
-          node --check bin/utharnessly.js
+          node --check bin/fikuthy.js
           npm pack --dry-run
           expected="$(node -p "require('./package.json').version")"
-          test "$(node bin/utharnessly.js --version)" = "utharnessly $expected"
+          test "$(node bin/fikuthy.js --version)" = "fikuthy $expected"
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.12'
       - name: Build and validate Python distributions
-        working-directory: python/utharnessly
+        working-directory: python/fikuthy
         run: |
           python -m pip install --upgrade build twine
           PYTHONPATH=src python -m unittest discover -s tests -v
           expected="$(python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
-          test "$(PYTHONPATH=src python -m utharnessly.cli --version)" = "utharnessly $expected"
+          test "$(PYTHONPATH=src python -m fikuthy.cli --version)" = "fikuthy $expected"
           python -m build
           python -m twine check --strict dist/*
 
@@ -95,16 +95,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for script in packages/utharness/build.sh termux/*.sh; do bash -n "$script"; done
-          TERMUX_PACKAGE_OUT="$RUNNER_TEMP/termux-package" TERMUX_ARCH=x86_64 TERMUX_RUST_BINARY="$GITHUB_WORKSPACE/target/release/utharness" TERMUX_UI_DIST="$GITHUB_WORKSPACE/ui/dist" packages/utharness/build.sh
+          for script in packages/fikuthy/build.sh termux/*.sh; do bash -n "$script"; done
+          TERMUX_PACKAGE_OUT="$RUNNER_TEMP/termux-package" TERMUX_ARCH=x86_64 TERMUX_RUST_BINARY="$GITHUB_WORKSPACE/target/release/fikuthy" TERMUX_UI_DIST="$GITHUB_WORKSPACE/ui/dist" packages/fikuthy/build.sh
           deb=$(find "$RUNNER_TEMP/termux-package" -maxdepth 1 -name '*.deb' -print -quit)
           test -n "$deb"
-          dpkg-deb --contents "$deb" | grep -F './data/data/com.termux/files/usr/bin/utharness'
-          dpkg-deb --contents "$deb" | grep -F './data/data/com.termux/files/usr/lib/utharness/dist/index.js'
+          dpkg-deb --contents "$deb" | grep -F './data/data/com.termux/files/usr/bin/fikuthy'
+          dpkg-deb --contents "$deb" | grep -F './data/data/com.termux/files/usr/lib/fikuthy/dist/index.js'
           if dpkg-deb --contents "$deb" | grep -E '^\./(usr|opt)/'; then exit 1; fi
           sha256sum -c "$deb.sha256"
           version="$(sed -n 's/^version = "\([^"]*\)"/\1/p' Cargo.toml | head -1)"
-          UTHARNESS_ALLOW_UNSIGNED=1 UTHARNESS_VERSION="$version" termux/build-repository.sh "$RUNNER_TEMP/termux-package" "$RUNNER_TEMP/termux-repository"
+          FIKUTHY_ALLOW_UNSIGNED=1 FIKUTHY_VERSION="$version" termux/build-repository.sh "$RUNNER_TEMP/termux-package" "$RUNNER_TEMP/termux-repository"
           test -s "$RUNNER_TEMP/termux-repository/dists/stable/Release"
           test -s "$RUNNER_TEMP/termux-repository/dists/stable/main/binary-x86_64/Packages.gz"
           test -f "$RUNNER_TEMP/termux-repository/UNSIGNED-LOCAL-TEST-ONLY"
@@ -115,10 +115,10 @@ jobs:
           home="$RUNNER_TEMP/termux-home"
           prefix="$home/prefix"
           mkdir -p "$prefix/bin"
-          HOME="$home" PREFIX="$prefix" TERMUX_VERSION=0.118.0 UTHARNESS_HOME="$home/.local/share/utharness" target/release/utharness termux setup
-          HOME="$home" PREFIX="$prefix" TERMUX_VERSION=0.118.0 target/release/utharness termux info
-          HOME="$home" PREFIX="$prefix" TERMUX_VERSION=0.118.0 target/release/utharness termux doctor
-          HOME="$home" PREFIX="$prefix" TERMUX_VERSION=0.118.0 target/release/utharness update | grep -F 'pkg update'
+          HOME="$home" PREFIX="$prefix" TERMUX_VERSION=0.118.0 FIKUTHY_HOME="$home/.local/share/fikuthy" target/release/fikuthy termux setup
+          HOME="$home" PREFIX="$prefix" TERMUX_VERSION=0.118.0 target/release/fikuthy termux info
+          HOME="$home" PREFIX="$prefix" TERMUX_VERSION=0.118.0 target/release/fikuthy termux doctor
+          HOME="$home" PREFIX="$prefix" TERMUX_VERSION=0.118.0 target/release/fikuthy update | grep -F 'pkg update'
 
   smoke:
     name: CLI smoke
@@ -133,12 +133,12 @@ jobs:
           workdir="$(mktemp -d)"
           home="$(mktemp -d)"
           cd "$workdir"
-          HOME="$home" UTHARNESS_HOME="$home/.utharness" "$GITHUB_WORKSPACE/target/release/utharness" init
-          HOME="$home" UTHARNESS_HOME="$home/.utharness" "$GITHUB_WORKSPACE/target/release/utharness" memory add "CI persistence works"
-          HOME="$home" UTHARNESS_HOME="$home/.utharness" "$GITHUB_WORKSPACE/target/release/utharness" memory search persistence
-          HOME="$home" UTHARNESS_HOME="$home/.utharness" "$GITHUB_WORKSPACE/target/release/utharness" doctor
-          HOME="$home" UTHARNESS_HOME="$home/.utharness" "$GITHUB_WORKSPACE/target/release/utharness" skills search git
-          HOME="$home" UTHARNESS_HOME="$home/.utharness" "$GITHUB_WORKSPACE/target/release/utharness" skills install builtin.git-status
-          HOME="$home" UTHARNESS_HOME="$home/.utharness" "$GITHUB_WORKSPACE/target/release/utharness" skills test builtin.git-status
-          HOME="$home" UTHARNESS_HOME="$home/.utharness" "$GITHUB_WORKSPACE/target/release/utharness" skills doctor
-          HOME="$home" UTHARNESS_HOME="$home/.utharness" "$GITHUB_WORKSPACE/target/release/utharness" skills remove builtin.git-status
+          HOME="$home" FIKUTHY_HOME="$home/.fikuthy" "$GITHUB_WORKSPACE/target/release/fikuthy" init
+          HOME="$home" FIKUTHY_HOME="$home/.fikuthy" "$GITHUB_WORKSPACE/target/release/fikuthy" memory add "CI persistence works"
+          HOME="$home" FIKUTHY_HOME="$home/.fikuthy" "$GITHUB_WORKSPACE/target/release/fikuthy" memory search persistence
+          HOME="$home" FIKUTHY_HOME="$home/.fikuthy" "$GITHUB_WORKSPACE/target/release/fikuthy" doctor
+          HOME="$home" FIKUTHY_HOME="$home/.fikuthy" "$GITHUB_WORKSPACE/target/release/fikuthy" skills search git
+          HOME="$home" FIKUTHY_HOME="$home/.fikuthy" "$GITHUB_WORKSPACE/target/release/fikuthy" skills install builtin.git-status
+          HOME="$home" FIKUTHY_HOME="$home/.fikuthy" "$GITHUB_WORKSPACE/target/release/fikuthy" skills test builtin.git-status
+          HOME="$home" FIKUTHY_HOME="$home/.fikuthy" "$GITHUB_WORKSPACE/target/release/fikuthy" skills doctor
+          HOME="$home" FIKUTHY_HOME="$home/.fikuthy" "$GITHUB_WORKSPACE/target/release/fikuthy" skills remove builtin.git-status

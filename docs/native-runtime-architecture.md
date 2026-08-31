@@ -1,15 +1,15 @@
-# Utharness Native Runtime and SQLite Persistence Architecture
+# Fikuthy Native Runtime and SQLite Persistence Architecture
 
 **Status:** Proposed implementation baseline
-**Product:** Utharness Agent Terminal CLI
-**Primary binary:** `utharness`
+**Product:** Fikuthy Agent Terminal CLI
+**Primary binary:** `fikuthy`
 **Scope:** Native Rust runtime, persistent local state, optional local API, and browser sidecar boundary
 
 ## 1. Executive decision
 
-Utharness should be implemented as a **single native Rust process with explicit async boundaries**, backed by one local SQLite database and a small number of durable filesystem areas for configuration, secrets references, session exports, logs, and temporary artifacts. The process should expose two user surfaces over the same application core: the React/Ink terminal UI and scriptable CLI commands. An optional local Axum server should expose read/write application operations to the existing browser control plane and future integrations, but it must remain loopback-only by default.
+Fikuthy should be implemented as a **single native Rust process with explicit async boundaries**, backed by one local SQLite database and a small number of durable filesystem areas for configuration, secrets references, session exports, logs, and temporary artifacts. The process should expose two user surfaces over the same application core: the React/Ink terminal UI and scriptable CLI commands. An optional local Axum server should expose read/write application operations to the existing browser control plane and future integrations, but it must remain loopback-only by default.
 
-The application should not be split into a daemon and client in the first release. A daemon can be added later without changing domain contracts because the CLI, TUI, and HTTP adapter will already depend on the same `utharness-core` service interfaces. This keeps installation, crash recovery, and local security simple while preserving a clean path to a durable broker when background jobs, remote clients, or multi-process access become necessary.
+The application should not be split into a daemon and client in the first release. A daemon can be added later without changing domain contracts because the CLI, TUI, and HTTP adapter will already depend on the same `fikuthy-core` service interfaces. This keeps installation, crash recovery, and local security simple while preserving a clean path to a durable broker when background jobs, remote clients, or multi-process access become necessary.
 
 > **Design rule:** The TUI, CLI, and local API are adapters. They never own business state. All state transitions flow through application services, which persist durable facts before publishing events.
 
@@ -17,7 +17,7 @@ The runtime should use Tokio for network I/O, timers, provider streaming, child-
 
 ## 2. Constraints and non-goals
 
-The design is derived from the supplied product requirements. Utharness is a standalone **Agent Terminal CLI**, not UTHARNESS OS. Version one must be local-first, usable without a hosted account, safe by default, recoverable after interruption, and extensible across providers, tools, skills, agents, memory, jobs, and MCP.
+The design is derived from the supplied product requirements. Fikuthy is a standalone **Agent Terminal CLI**, not FIKUTHY OS. Version one must be local-first, usable without a hosted account, safe by default, recoverable after interruption, and extensible across providers, tools, skills, agents, memory, jobs, and MCP.
 
 | Constraint | Architectural consequence |
 | --- | --- |
@@ -37,23 +37,23 @@ Version one does not require a hosted backend, mandatory telemetry, a desktop GU
 ## 3. Workspace layout
 
 ```text
-utharness/
+fikuthy/
 ├── Cargo.toml
 ├── crates/
-│   ├── utharness-cli/          # Clap commands, exit codes, stdout/stderr contracts
-│   ├── utharness-core/         # Domain types, service ports, event model, state machine
-│   ├── utharness-agent/        # Planner, executor, verification, context assembly
-│   ├── utharness-models/       # Model registry, capabilities, routing, usage metadata
-│   ├── utharness-tools/        # Files, shell, PTY, Git, HTTP, browser, process tools
-│   ├── utharness-memory/       # Memory writes, retrieval, FTS5 queries, compaction
-│   ├── utharness-skills/       # Manifest loader, activation, validation, skill execution
-│   ├── utharness-agents/       # Child-agent lifecycle, delegation, aggregation
-│   ├── utharness-scheduler/    # Job parsing, due selection, leases, retry policy
-│   ├── utharness-security/     # Policies, path sandbox, secret redaction, audit decisions
-│   ├── utharness-config/       # TOML loading, defaults, migrations, platform paths
-│   ├── utharness-storage/      # SQLite pool, migrations, repositories, transactions
-│   ├── utharness-protocol/     # Versioned DTOs for local API and browser sidecar
-│   └── utharness-server/       # Axum loopback API, SSE, health and diagnostics routes
+│   ├── fikuthy-cli/          # Clap commands, exit codes, stdout/stderr contracts
+│   ├── fikuthy-core/         # Domain types, service ports, event model, state machine
+│   ├── fikuthy-agent/        # Planner, executor, verification, context assembly
+│   ├── fikuthy-models/       # Model registry, capabilities, routing, usage metadata
+│   ├── fikuthy-tools/        # Files, shell, PTY, Git, HTTP, browser, process tools
+│   ├── fikuthy-memory/       # Memory writes, retrieval, FTS5 queries, compaction
+│   ├── fikuthy-skills/       # Manifest loader, activation, validation, skill execution
+│   ├── fikuthy-agents/       # Child-agent lifecycle, delegation, aggregation
+│   ├── fikuthy-scheduler/    # Job parsing, due selection, leases, retry policy
+│   ├── fikuthy-security/     # Policies, path sandbox, secret redaction, audit decisions
+│   ├── fikuthy-config/       # TOML loading, defaults, migrations, platform paths
+│   ├── fikuthy-storage/      # SQLite pool, migrations, repositories, transactions
+│   ├── fikuthy-protocol/     # Versioned DTOs for local API and browser sidecar
+│   └── fikuthy-server/       # Axum loopback API, SSE, health and diagnostics routes
 ├── ui/                         # TypeScript + React/Ink terminal UI
 ├── packages/
 │   └── browser-driver/         # TypeScript + Playwright sidecar
@@ -67,21 +67,21 @@ utharness/
 
 ### 3.1 Dependency direction
 
-`utharness-core` is the dependency center and must not depend on TUI, CLI, Axum, Playwright, or concrete storage. It defines domain entities, commands, events, errors, and ports. `utharness-storage` implements persistence ports. `utharness-agent`, `utharness-tools`, `utharness-memory`, `utharness-scheduler`, and `utharness-agents` implement application services using core ports. `utharness-cli`, `ui/`, and `utharness-server` are delivery adapters that compose the services in `utharness-cli`'s application bootstrap.
+`fikuthy-core` is the dependency center and must not depend on TUI, CLI, Axum, Playwright, or concrete storage. It defines domain entities, commands, events, errors, and ports. `fikuthy-storage` implements persistence ports. `fikuthy-agent`, `fikuthy-tools`, `fikuthy-memory`, `fikuthy-scheduler`, and `fikuthy-agents` implement application services using core ports. `fikuthy-cli`, `ui/`, and `fikuthy-server` are delivery adapters that compose the services in `fikuthy-cli`'s application bootstrap.
 
 | Crate | Owns | Must not own |
 | --- | --- | --- |
-| `utharness-core` | IDs, commands, events, state machines, port traits | SQL, terminal drawing, HTTP, provider SDK details |
-| `utharness-storage` | SQLite connections, migrations, repositories, transaction helpers | Agent policy, TUI state interpretation |
-| `utharness-agent` | Agent loop and task orchestration | Direct terminal rendering or raw SQL |
-| `utharness-tools` | Tool schemas and concrete execution | Bypassing permission engine |
-| `utharness-security` | Authorization, sandboxing, redaction, audit | Provider selection or UI concerns |
+| `fikuthy-core` | IDs, commands, events, state machines, port traits | SQL, terminal drawing, HTTP, provider SDK details |
+| `fikuthy-storage` | SQLite connections, migrations, repositories, transaction helpers | Agent policy, TUI state interpretation |
+| `fikuthy-agent` | Agent loop and task orchestration | Direct terminal rendering or raw SQL |
+| `fikuthy-tools` | Tool schemas and concrete execution | Bypassing permission engine |
+| `fikuthy-security` | Authorization, sandboxing, redaction, audit | Provider selection or UI concerns |
 | `ui/` | Layout, input, rendering, local view model | Direct file/shell/provider calls |
-| `utharness-server` | API DTOs, authentication on loopback, SSE | Independent business rules |
+| `fikuthy-server` | API DTOs, authentication on loopback, SSE | Independent business rules |
 
 ### 3.2 Core ports
 
-The first implementation should define traits in `utharness-core` and provide concrete implementations through dependency injection. The important ports are:
+The first implementation should define traits in `fikuthy-core` and provide concrete implementations through dependency injection. The important ports are:
 
 ```rust
 #[async_trait]
@@ -121,7 +121,7 @@ The concrete `AppContext` should contain shared handles to repositories, policy 
                  └──────────────┬──────────────┘
                                 │ commands + subscriptions
                  ┌──────────────▼──────────────┐
-                 │       utharness-core         │
+                 │       fikuthy-core         │
                  │ application services/events  │
                  └───────┬───────────┬─────────┘
                          │           │
@@ -164,7 +164,7 @@ RuntimeEvent {
 
 ### 5.1 Database placement and connection policy
 
-Use one database at `~/.local/share/utharness/utharness.db`, or the platform equivalent returned by `utharness-config`. Workspace-specific records carry a `workspace_id` and canonical path. Do not create one database per session; that makes global search, diagnostics, migrations, and backups unnecessarily difficult.
+Use one database at `~/.local/share/fikuthy/fikuthy.db`, or the platform equivalent returned by `fikuthy-config`. Workspace-specific records carry a `workspace_id` and canonical path. Do not create one database per session; that makes global search, diagnostics, migrations, and backups unnecessarily difficult.
 
 `rusqlite` is the storage binding. It provides prepared statements, transactions, backup support, hooks, and SQLite type conversion suitable for repository implementations.[3] Because `rusqlite::Connection` is synchronous, the storage service should run its writer connection on a dedicated blocking thread. Read operations may use a small bounded pool of blocking connections. No async task should hold a SQLite transaction across a network call, provider stream, process wait, or terminal interaction.
 
@@ -398,13 +398,13 @@ The permission engine is a mandatory dependency of every mutating or externally 
 | Git commit/checkout | Deny | Prompt | Allow | Rule-based |
 | Secrets/environment | Redacted/filtered | Prompt | Explicit key references only | Rule-based |
 
-The file engine must canonicalize paths, reject traversal outside allowed workspace roots, enforce maximum file size, detect binary content, and deny protected paths such as `.git/objects`, credential files, and the Utharness database unless the user explicitly performs a maintenance command. Shell execution must use a sanitized environment, an explicit working directory, timeouts, process-group cancellation, stdout/stderr limits, and secret redaction before persistence or display.
+The file engine must canonicalize paths, reject traversal outside allowed workspace roots, enforce maximum file size, detect binary content, and deny protected paths such as `.git/objects`, credential files, and the Fikuthy database unless the user explicitly performs a maintenance command. Shell execution must use a sanitized environment, an explicit working directory, timeouts, process-group cancellation, stdout/stderr limits, and secret redaction before persistence or display.
 
 Secrets should be referenced by provider ID and retrieved from the OS keyring or environment variables. API keys must never be stored in `providers` as plaintext or written to logs, events, checkpoints, model prompts, or tool output. Audit records should retain the decision, actor, tool, normalized target, policy mode, and redacted reason.
 
 ## 8. Local API and browser sidecar
 
-`utharness-server` should bind to `127.0.0.1` on an automatically selected port, or use a Unix domain socket on Unix-like systems. It should publish a short-lived bearer token in the runtime directory and require it for non-health routes. Do not bind to `0.0.0.0` by default.
+`fikuthy-server` should bind to `127.0.0.1` on an automatically selected port, or use a Unix domain socket on Unix-like systems. It should publish a short-lived bearer token in the runtime directory and require it for non-health routes. Do not bind to `0.0.0.0` by default.
 
 The initial API surface should be versioned under `/api/v1`:
 
@@ -441,7 +441,7 @@ Graceful shutdown should stop accepting new commands, cancel or pause active wor
 
 Use `tracing` with JSON logs written to the local logs directory and a compact human-readable layer for the TUI. Every command, model request, tool call, permission decision, scheduler claim, database migration, and recovery action receives a `trace_id`. Secret redaction must happen before the event enters a formatter or persistence repository.
 
-`utharness doctor` should run actionable checks for version, paths, database integrity, migration level, WAL health, workspace accessibility, shell availability, Git repository state, provider configuration, model health, browser sidecar availability, installed skills, MCP configuration, permission policy, and network reachability. Each failure should include a remediation string and a severity.
+`fikuthy doctor` should run actionable checks for version, paths, database integrity, migration level, WAL health, workspace accessibility, shell availability, Git repository state, provider configuration, model health, browser sidecar availability, installed skills, MCP configuration, permission policy, and network reachability. Each failure should include a remediation string and a severity.
 
 ## 11. Testing strategy
 
@@ -467,7 +467,7 @@ Provider adapters should use contract tests against a local mock server. Real pr
 | --- | --- | --- |
 | 0. Workspace foundation | Cargo workspace, error types, IDs, config paths, tracing, CI checks. | `cargo check`, formatting, lint, and empty binary work on Linux/macOS/Windows CI. |
 | 1. Storage kernel | SQLite open policy, migrations, repositories, event log, backup command. | Fresh install and upgrade tests pass; sessions and messages survive restart. |
-| 2. CLI and TUI shell | Clap commands, terminal lifecycle, React/Ink layout, keyboard routing, theme loading. | `utharness`, `init`, `version`, `sessions`, `resume`, `doctor` work without a provider. |
+| 2. CLI and TUI shell | Clap commands, terminal lifecycle, React/Ink layout, keyboard routing, theme loading. | `fikuthy`, `init`, `version`, `sessions`, `resume`, `doctor` work without a provider. |
 | 3. Local tools and security | File, shell, PTY, Git, policy engine, audit log. | Safe tools execute; denied and approval-required actions cannot bypass policy. |
 | 4. Agent runtime | Context builder, planner, task graph, provider gateway, streaming, checkpoints. | Mock-provider end-to-end task completes, pauses, cancels, and resumes. |
 | 5. Memory and skills | Memory CRUD/FTS5, scoped retrieval, built-in skill manifests and runner. | Memory search returns workspace-scoped ranked results; skills validate and run. |

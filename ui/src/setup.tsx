@@ -36,7 +36,7 @@ export function SetupApp() {
   const loadModels = async (method: AuthMethod, selectedProvider = provider, info = providerInfo) => {
     if (method === 'oauth') { setError(`${info.label} OAuth is not exposed by this provider adapter. Choose API Key or Environment Variable.`); setStage('error'); return; }
     if (method === 'skip') { setModelOptions([info.model]); setModel(info.model); setStage(mode === 'full' || mode === 'developer' ? 'tools' : 'review'); return; }
-    const env = { ...process.env, UTHARNESS_PROVIDER: selectedProvider, UTHARNESS_MODEL: info.model, ...(secret && info.key ? { [info.key]: secret } : {}), ...(selectedProvider === 'custom' ? { UTHARNESS_PROVIDER_URL: customUrl } : {}) };
+    const env = { ...process.env, FIKUTHY_PROVIDER: selectedProvider, FIKUTHY_MODEL: info.model, ...(secret && info.key ? { [info.key]: secret } : {}), ...(selectedProvider === 'custom' ? { FIKUTHY_PROVIDER_URL: customUrl } : {}) };
     const result = await execa(runtimeBinary(), ['models', 'list'], { cwd: process.cwd(), env, reject: false });
     if (result.exitCode !== 0) { setError(result.stderr || result.stdout || 'Credential or model validation failed'); setStage('error'); return; }
     const found = result.stdout.split(/\r?\n/).filter(line => line && line !== 'MODELS' && !line.startsWith('active:'));
@@ -87,7 +87,7 @@ export function SetupApp() {
 
   const available = report?.components.filter(item => item.state === 'AVAILABLE').length ?? 0, total = report?.components.length ?? 0;
   return <Box flexDirection="column" paddingX={compact ? 1 : 3} width={columns}>
-    <Text bold color={purple}>UTHARNESS · INTERACTIVE SETUP</Text><Text color={muted}>{'─'.repeat(Math.max(20, Math.min(columns - 2, 76)))}</Text>
+    <Text bold color={purple}>FIKUTHY · INTERACTIVE SETUP</Text><Text color={muted}>{'─'.repeat(Math.max(20, Math.min(columns - 2, 76)))}</Text>
     {stage === 'scan' ? <><Text>◇ Detecting environment and scanning prerequisites…</Text><Progress completed={0} total={1} label="scanning" /></> : null}
     {stage === 'mode' ? <><Text>◇ {report?.os}/{report?.architecture} · {report?.shell} · {report?.terminal}</Text><Progress completed={available} total={total} label="environment scan complete" /><List items={modes} selected={selected} /></> : null}
     {stage === 'provider' ? <><Text bold>◉ Select AI provider</Text><List items={providers} selected={selected} /></> : null}
@@ -96,10 +96,10 @@ export function SetupApp() {
     {stage === 'secret' ? <><Text bold>◆ Enter {providerInfo.key}</Text><Text color={cyan}>› {'•'.repeat(secret.length)}<Text inverse> </Text></Text><Text color={muted}>Masked · never logged · private secrets.env</Text></> : null}
     {stage === 'model' ? <><Text bold>◇ Select validated model</Text><List items={list} selected={selected} /></> : null}
     {stage === 'tools' ? <><Text bold>&gt;_ Select runtime capabilities</Text><List items={tools} selected={selected} marked={enabled} /></> : null}
-    {stage === 'import' ? <><Text bold>▤ Import utharness.json</Text><Text color={cyan}>› {importPath}<Text inverse> </Text></Text></> : null}
+    {stage === 'import' ? <><Text bold>▤ Import fikuthy.json</Text><Text color={cyan}>› {importPath}<Text inverse> </Text></Text></> : null}
     {stage === 'review' ? <Box flexDirection="column"><Text bold>Review and validate</Text><Text>Mode       <Text color={cyan}>{mode}</Text></Text><Text>Provider   <Text color={cyan}>{provider}</Text></Text><Text>Model      <Text color={cyan}>{model}</Text></Text><Text>Credential <Text color={auth === 'skip' ? yellow : green}>{mode === 'blank' ? 'not required' : auth === 'api_key' ? 'masked key ready' : auth}</Text></Text><Text>Tools      <Text color={cyan}>{(mode === 'blank' ? ['workspace_read'] : selectedTools.map(item => item.id)).join(', ')}</Text></Text><Text color={cyan}>Enter saves, validates, and prepares first chat.</Text></Box> : null}
     {stage === 'saving' ? <Box flexDirection="column"><Text color={cyan}>◇ Validating provider and model…</Text><Text color={muted}>Saving configuration only after every required check succeeds.</Text></Box> : null}
-    {stage === 'done' ? <Box flexDirection="column"><Text color={green} bold>✓ Setup complete and validated</Text><Text>Configuration, private secrets, storage, tools, and model route are ready.</Text><Text color={cyan}>Press Enter, then run `utharness` to start the first chat.</Text></Box> : null}
+    {stage === 'done' ? <Box flexDirection="column"><Text color={green} bold>✓ Setup complete and validated</Text><Text>Configuration, private secrets, storage, tools, and model route are ready.</Text><Text color={cyan}>Press Enter, then run `fikuthy` to start the first chat.</Text></Box> : null}
     {stage === 'error' ? <Box flexDirection="column"><Text color={red} bold>! Setup needs attention</Text><Text>{error}</Text><Text color={muted}>Press Enter to return to setup.</Text></Box> : null}
     {['mode', 'provider', 'auth', 'model', 'tools'].includes(stage) ? <Text color={muted}>↑↓ navigate · {stage === 'tools' ? 'Space toggle · ' : ''}Enter select · Esc previous · Ctrl+C exit</Text> : null}
   </Box>;

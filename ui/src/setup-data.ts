@@ -12,7 +12,7 @@ export const modes: Array<{ id: SetupMode; label: string; description: string }>
   { id: 'local_ai', label: 'Local AI Setup', description: 'Ollama with no hosted API key' },
   { id: 'custom', label: 'Custom Provider', description: 'OpenAI-compatible URL, key, and model' },
   { id: 'blank', label: 'Blank Slate', description: 'offline planner and workspace reading only' },
-  { id: 'import', label: 'Import Configuration', description: 'validate an existing utharness.json' },
+  { id: 'import', label: 'Import Configuration', description: 'validate an existing fikuthy.json' },
   { id: 'exit', label: 'Exit', description: 'leave without changing configuration' }
 ];
 
@@ -25,7 +25,7 @@ export const providers: ProviderOption[] = [
   { id: 'fireworks', label: 'Fireworks AI', description: 'OpenAI-compatible model API', model: 'accounts/fireworks/models/llama-v3p3-70b-instruct', key: 'FIREWORKS_API_KEY' },
   { id: 'nvidia', label: 'NVIDIA NIM', description: 'hosted Nemotron models', model: 'nvidia/nemotron-3-super-120b-a12b', key: 'NVIDIA_API_KEY' },
   { id: 'ollama', label: 'Ollama', description: 'local model server; no API key', model: 'qwen2.5-coder:7b' },
-  { id: 'custom', label: 'Custom endpoint', description: 'OpenAI-compatible endpoint', model: 'default', key: 'UTHARNESS_API_KEY' }
+  { id: 'custom', label: 'Custom endpoint', description: 'OpenAI-compatible endpoint', model: 'default', key: 'FIKUTHY_API_KEY' }
 ];
 
 export const authMethods: Array<{ id: AuthMethod; label: string; description: string }> = [

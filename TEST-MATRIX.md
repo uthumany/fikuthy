@@ -1,7 +1,7 @@
-# UTHARNESS Test Matrix
+# FIKUTHY Test Matrix
 
 **Date:** 2026-08-27
-**Repository:** `uthumany/utharnessly`
+**Repository:** `fikuthy/fikuthy`
 **Source QA target:** 0.2.8
 **Published release:** v0.2.8
 
@@ -66,7 +66,7 @@ Status values are **Passed**, **Partial**, **Unverified**, or **Unsupported**. P
 
 | Feature | Normal path | Invalid/empty path | Persistence/recovery | Result |
 |---|---|---|---|---|
-| Startup/banner | `utharness`, `tui --headless` | Narrow/limited color | Process exit and rerun | Passed in CLI and PTY tests. |
+| Startup/banner | `fikuthy`, `tui --headless` | Narrow/limited color | Process exit and rerun | Passed in CLI and PTY tests. |
 | Offline chat | `chat PROMPT` | Empty search and invalid session | SQLite session/messages | Passed. |
 | Autonomous planner | `autonomous PROMPT` | Missing key, invalid JSON, unsupported tool | Event log and bounded plan | Mock-provider E2E passed; real provider not repeated. |
 | SAFE shell policy | `run --command` | Mutation without `--allow` | No command execution | Passed. |

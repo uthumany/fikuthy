@@ -30,7 +30,7 @@ const commands: PaletteItem[] = [
   { id: 'theme', label: '/theme', description: 'switch terminal theme', command: '/theme' },
   { id: 'logs', label: '/logs', description: 'open runtime logs', shortcut: 'Ctrl+L', overlay: 'logs' },
   { id: 'doctor', label: '/doctor', description: 'run local diagnostics', command: '/doctor' },
-  { id: 'quit', label: '/quit', description: 'exit Utharness', command: '/quit' }
+  { id: 'quit', label: '/quit', description: 'exit Fikuthy', command: '/quit' }
 ];
 
 const overlayDefaults: Record<Exclude<OverlayKind, null>, PaletteItem[]> = {
@@ -93,7 +93,7 @@ export function App() {
   const chatHeight = Math.max(1, rows - fixedHeight);
   const visibleCount = Math.max(1, Math.floor(chatHeight / (compact ? 3 : 4)));
 
-  useEffect(() => { void loadUiState().then(state => { const bannerMode = ['full', 'compact', 'minimal', 'hide'].includes(process.env.UTHARNESS_BANNER ?? '') ? process.env.UTHARNESS_BANNER as PersistedUiState['bannerMode'] : state.bannerMode; const iconMode = ['nerd', 'unicode', 'ascii'].includes(process.env.UTHARNESS_ICONS ?? '') ? process.env.UTHARNESS_ICONS as PersistedUiState['iconMode'] : state.iconMode; setUi({ ...state, bannerMode, iconMode }); setHydrated(true); }); }, []);
+  useEffect(() => { void loadUiState().then(state => { const bannerMode = ['full', 'compact', 'minimal', 'hide'].includes(process.env.FIKUTHY_BANNER ?? '') ? process.env.FIKUTHY_BANNER as PersistedUiState['bannerMode'] : state.bannerMode; const iconMode = ['nerd', 'unicode', 'ascii'].includes(process.env.FIKUTHY_ICONS ?? '') ? process.env.FIKUTHY_ICONS as PersistedUiState['iconMode'] : state.iconMode; setUi({ ...state, bannerMode, iconMode }); setHydrated(true); }); }, []);
   useEffect(() => { if (!hydrated) return; const timer = setTimeout(() => void saveUiState(ui).catch(() => undefined), 180); return () => clearTimeout(timer); }, [ui, hydrated]);
   useEffect(() => { if (!streaming || ui.reducedMotion) return; const timer = setInterval(() => setTick(value => value + 1), 100); return () => clearInterval(timer); }, [streaming, ui.reducedMotion]);
 
@@ -162,7 +162,7 @@ export function App() {
     setStreaming(true);
     void submitPrompt(prompt).then(response => {
       const id = `${Date.now()}-assistant`;
-      setMessages(current => unique([...current, { id, role: 'utharness', text: response.text, time: now(), tool: response.tool }]));
+      setMessages(current => unique([...current, { id, role: 'fikuthy', text: response.text, time: now(), tool: response.tool }]));
       setScrollOffset(0);
     }).catch(error => setMessages(current => unique([...current, { id: `${Date.now()}-error`, role: 'error', text: error instanceof Error ? error.message : String(error), time: now() }]))).finally(() => setStreaming(false));
   };
@@ -200,7 +200,7 @@ export function App() {
 
   const visibleMessages = messages.slice(Math.max(0, messages.length - visibleCount - scrollOffset), messages.length - scrollOffset || undefined);
   const chatWidth = mode === 'workspace' ? workspaceWidths(columns).chat : contentWidth;
-  const chat = <Box flexDirection="column" width={chatWidth} height={chatHeight} overflow="hidden" paddingX={mode === 'workspace' ? 1 : 0}>{runtimeError ? <Text color={tone(palette.error, colorMode)}>Runtime: {runtimeError}</Text> : null}{visibleMessages.map(message => <MessageRow key={message.id} message={message} width={mode === 'workspace' ? chatWidth - 3 : chatWidth} colorMode={colorMode} tick={tick} />)}{streaming ? <Text color={tone(palette.primary, colorMode)}>  {ui.reducedMotion ? '◆' : '◐'} UTHARNESS is working…</Text> : null}</Box>;
+  const chat = <Box flexDirection="column" width={chatWidth} height={chatHeight} overflow="hidden" paddingX={mode === 'workspace' ? 1 : 0}>{runtimeError ? <Text color={tone(palette.error, colorMode)}>Runtime: {runtimeError}</Text> : null}{visibleMessages.map(message => <MessageRow key={message.id} message={message} width={mode === 'workspace' ? chatWidth - 3 : chatWidth} colorMode={colorMode} tick={tick} />)}{streaming ? <Text color={tone(palette.primary, colorMode)}>  {ui.reducedMotion ? '◆' : '◐'} FIKUTHY is working…</Text> : null}</Box>;
 
   return <Box flexDirection="column" width="100%" height={rows} paddingX={compact ? 0 : 1}>
     <PersistentHeader width={columns} rows={rows} mode={ui.bannerMode} colorMode={colorMode} iconMode={ui.iconMode} />
@@ -208,7 +208,7 @@ export function App() {
     {showWarning ? <WorkspaceWarning colorMode={colorMode} /> : null}
     {mode === 'workspace' && snapshot ? <Box height={chatHeight}><Navigation colorMode={colorMode} width={workspaceWidths(columns).navigation} />{chat}<Inspector snapshot={snapshot} colorMode={colorMode} width={workspaceWidths(columns).inspector} /></Box> : chat}
     {derivedOverlay ? <Overlay kind={derivedOverlay} items={visibleItems} selected={selected} query={query} width={contentWidth} colorMode={colorMode} /> : null}
-    <Composer value={ui.draft} onChange={setDraft} onSubmit={send} width={contentWidth} colorMode={colorMode} focused={composerFocused && !overlay} disabled={streaming || Boolean(overlay)} placeholder={compact ? 'Ask Utharness…' : 'Type your message or @path/to/file'} />
+    <Composer value={ui.draft} onChange={setDraft} onSubmit={send} width={contentWidth} colorMode={colorMode} focused={composerFocused && !overlay} disabled={streaming || Boolean(overlay)} placeholder={compact ? 'Ask Fikuthy…' : 'Type your message or @path/to/file'} />
     {showInputHints ? <Text color={tone(palette.muted, colorMode)}> {composerFocused ? 'Enter send · Shift+Enter newline' : 'Tab focus composer'} · Ctrl+K commands · Ctrl+B {mode === 'focus' ? 'workspace' : 'focus'}</Text> : null}
     {snapshot ? <StatusBar snapshot={snapshot} width={contentWidth} colorMode={colorMode} /> : <Text color={tone(palette.muted, colorMode)}>Loading runtime status…</Text>}
   </Box>;

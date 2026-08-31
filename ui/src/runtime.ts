@@ -22,7 +22,7 @@ const runtimeSchema = z.object({
   storage: z.string(),
   messages: z.array(z.object({
     id: z.string(),
-    role: z.enum(['utharness', 'you', 'system', 'agent', 'tool', 'memory', 'error']),
+    role: z.enum(['fikuthy', 'you', 'system', 'agent', 'tool', 'memory', 'error']),
     text: z.string(),
     time: z.string(),
     tool: z.object({
@@ -43,7 +43,7 @@ const now = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '
 const id = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 const initialMessages = (): Message[] => [
-  { id: id(), role: 'utharness', text: 'Ready. Ask a question, reference @files, or run a slash command.', time: now() }
+  { id: id(), role: 'fikuthy', text: 'Ready. Ask a question, reference @files, or run a slash command.', time: now() }
 ];
 
 async function commandOutput(command: string, args: string[], cwd: string): Promise<string> {
@@ -64,7 +64,7 @@ export async function loadSnapshot(cwd = process.cwd()): Promise<RuntimeSnapshot
   const isTermux = Boolean(process.env.TERMUX_VERSION || process.env.PREFIX?.includes('com.termux'));
   const workspacePath = gitRoot || cwd;
   const workspace = workspacePath.startsWith(home) ? `~${workspacePath.slice(home.length)}` : workspacePath;
-  const provider = process.env.UTHARNESS_PROVIDER ?? (process.env.OPENROUTER_API_KEY ? 'openrouter' : 'offline');
+  const provider = process.env.FIKUTHY_PROVIDER ?? (process.env.OPENROUTER_API_KEY ? 'openrouter' : 'offline');
   const storagePath = path.join(home, 'storage');
   let storage = 'sandbox';
   try {
@@ -75,10 +75,10 @@ export async function loadSnapshot(cwd = process.cwd()): Promise<RuntimeSnapshot
   }
   const snapshot = {
     workspace,
-    permission: process.env.UTHARNESS_PERMISSION ?? 'offline (default deny)',
+    permission: process.env.FIKUTHY_PERMISSION ?? 'offline (default deny)',
     provider,
-    model: process.env.UTHARNESS_MODEL ?? 'gpt-4o-mini',
-    context: process.env.UTHARNESS_CONTEXT ?? '128K context left',
+    model: process.env.FIKUTHY_MODEL ?? 'gpt-4o-mini',
+    context: process.env.FIKUTHY_CONTEXT ?? '128K context left',
     network: process.env.OPENROUTER_API_KEY ? 'connected' : 'offline',
     projectSpecific: Boolean(gitRoot),
     platform: isTermux ? 'termux' : process.platform,
@@ -87,7 +87,7 @@ export async function loadSnapshot(cwd = process.cwd()): Promise<RuntimeSnapshot
     termuxApi: apiCommand ? 'available' : 'optional/missing',
     storage,
     git: parseGitSnapshot(branch, porcelain, diffStats),
-    activeAgents: Number.parseInt(process.env.UTHARNESS_ACTIVE_AGENTS ?? '0', 10) || 0,
+    activeAgents: Number.parseInt(process.env.FIKUTHY_ACTIVE_AGENTS ?? '0', 10) || 0,
     messages: initialMessages()
   } satisfies RuntimeSnapshot;
   return runtimeSchema.parse(snapshot);
@@ -136,12 +136,12 @@ export async function submitPrompt(prompt: string, cwd = process.cwd()): Promise
 }
 
 export function watchRuntime(cwd: string, onChange: () => void): FSWatcher {
-  const watcher = chokidar.watch([path.join(cwd, 'UTHARNESS.md'), path.join(cwd, '.git', 'HEAD')], {
+  const watcher = chokidar.watch([path.join(cwd, 'FIKUTHY.md'), path.join(cwd, '.git', 'HEAD')], {
     ignoreInitial: true,
     persistent: false
   });
   watcher.on('all', (_event, changedPath) => {
-    if (changedPath.endsWith('UTHARNESS.md') || changedPath.endsWith(path.join('.git', 'HEAD'))) onChange();
+    if (changedPath.endsWith('FIKUTHY.md') || changedPath.endsWith(path.join('.git', 'HEAD'))) onChange();
   });
   return watcher;
 }

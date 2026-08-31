@@ -1,13 +1,13 @@
 {
-  "name": "@utharness/terminal-ui",
+  "name": "@fikuthy/terminal-ui",
   "version": "0.2.13",
   "private": true,
   "engines": { "node": ">=22" },
   "packageManager": "pnpm@11.19.0",
-  "description": "Reference-matched Utharness terminal UI built with React and Ink",
+  "description": "Reference-matched Fikuthy terminal UI built with React and Ink",
   "type": "module",
   "bin": {
-    "utharness-ui": "dist/index.js"
+    "fikuthy-ui": "dist/index.js"
   },
   "scripts": {
     "build": "tsup --config tsup.config.ts",

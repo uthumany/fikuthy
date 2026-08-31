@@ -1,19 +1,19 @@
 [workspace]
 resolver = "2"
 members = [
-  "crates/utharness-core",
-  "crates/utharness-storage",
-  "crates/utharness-security",
-  "crates/utharness-cli",
-  "crates/utharness-provider",
+  "crates/fikuthy-core",
+  "crates/fikuthy-storage",
+  "crates/fikuthy-security",
+  "crates/fikuthy-cli",
+  "crates/fikuthy-provider",
 ]
 
 [workspace.package]
 version = "0.2.13"
 edition = "2021"
 license = "MIT"
-authors = ["Utharness Contributors"]
-repository = "https://github.com/uthumany/utharnessly"
+authors = ["Fikuthy Contributors"]
+repository = "https://github.com/fikuthy/fikuthy"
 
 [workspace.dependencies]
 anyhow = "1.0"

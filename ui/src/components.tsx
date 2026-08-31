@@ -16,7 +16,7 @@ export function StartupTips({ colorMode }: { colorMode: ColorMode }) {
 }
 
 export function WorkspaceWarning({ colorMode }: { colorMode: ColorMode }) {
-  return <Box borderStyle="round" borderColor={tone(palette.warning, colorMode)} paddingX={1} marginBottom={1}><Text color={tone(palette.warning, colorMode)}>{icon('warning')}  You are not in a project-specific directory.{String.fromCharCode(10)}   Open a workspace folder and run utharness there for best results.</Text></Box>;
+  return <Box borderStyle="round" borderColor={tone(palette.warning, colorMode)} paddingX={1} marginBottom={1}><Text color={tone(palette.warning, colorMode)}>{icon('warning')}  You are not in a project-specific directory.{String.fromCharCode(10)}   Open a workspace folder and run fikuthy there for best results.</Text></Box>;
 }
 
 function toolTone(tool: ToolCard, mode: ColorMode) { if (tool.state === 'error') return tone(palette.error, mode); if (tool.state === 'approval') return tone(palette.warning, mode); if (tool.state === 'running') return tone(palette.primary, mode); if (tool.state === 'waiting') return tone(palette.muted, mode); return tone(palette.success, mode); }
@@ -26,7 +26,7 @@ export function ToolCardView({ tool, width, colorMode, tick = 0 }: { tool: ToolC
 }
 
 const roleMeta = (role: Message['role']) => ({
-  utharness: ['UTHARNESS', palette.agent, '◉'], you: ['YOU', palette.primary, '○'], system: ['SYSTEM', palette.warning, '!'],
+  fikuthy: ['FIKUTHY', palette.agent, '◉'], you: ['YOU', palette.primary, '○'], system: ['SYSTEM', palette.warning, '!'],
   agent: ['AGENT', palette.agent, '◆'], tool: ['TOOL', palette.tool, '⚙'], memory: ['MEMORY', palette.accent, '◫'], error: ['ERROR', palette.error, '✗']
 } as const)[role];
 export function MessageRow({ message, width, colorMode, tick }: { message: Message; width: number; colorMode: ColorMode; tick: number }) {

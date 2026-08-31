@@ -369,6 +369,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "fikuthy-cron"
+version = "0.2.13"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "fikuthy-provider"
 version = "0.2.13"
 dependencies = [

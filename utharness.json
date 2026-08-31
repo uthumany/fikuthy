@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "mode": "full",
+  "provider": "nvidia",
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "permissionMode": "safe",
+  "tools": [
+    "workspace_read",
+    "git_inspection",
+    "skills",
+    "memory"
+  ],
+  "ui": {
+    "banner": true,
+    "bannerMode": "full",
+    "icons": "unicode"
+  }
+}

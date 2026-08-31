@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+set -eu
+printf '%s\n' \
+  'Removing the utharness package files.' \
+  'User data is preserved under ~/.config/utharness, ~/.local/share/utharness, and ~/.cache/utharness.'
+exit 0

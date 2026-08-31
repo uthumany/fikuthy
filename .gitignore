@@ -1,0 +1,12 @@
+/target
+*.db
+*.db-shm
+*.db-wal
+.env
+.DS_Store
+.idea/
+.vscode/
+/ui/screenshots/*.ansi
+/ui/screenshots/*.png
+/ui/dist/
+/ui/node_modules/

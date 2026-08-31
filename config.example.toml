@@ -1,0 +1,21 @@
+# Copy to ~/.config/utharness/config.toml
+workspace = "~/projects/example"
+permission_mode = "SAFE"
+theme = "utharness-carbon"
+provider = "offline"
+model = "offline-planner"
+
+[storage]
+# The default is ~/.local/share/utharness/utharness.db
+durable_writes = false
+
+[providers.offline]
+name = "Offline planner"
+local = true
+enabled = true
+
+# API keys belong in the OS keyring or environment variables, never in Git.
+# [providers.openai]
+# base_url = "https://api.openai.com/v1"
+# api_key_env = "OPENAI_API_KEY"
+# model = "gpt-5"

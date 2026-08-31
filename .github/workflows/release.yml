@@ -1,0 +1,199 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }}-${{ matrix.arch }} artifact
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            arch: x64
+            archive: tar.gz
+            file_pattern: x86-64
+          - os: macos-15-intel
+            platform: macos
+            arch: x64
+            archive: tar.gz
+            file_pattern: x86_64
+          - os: macos-latest
+            platform: macos
+            arch: arm64
+            archive: tar.gz
+            file_pattern: arm64
+          - os: windows-latest
+            platform: windows
+            arch: x64
+            archive: zip
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: ui/pnpm-lock.yaml
+      - run: pnpm --dir ui install --frozen-lockfile
+      - run: pnpm --dir ui build
+      - run: cargo build --release
+      - name: Verify native binary architecture
+        if: runner.os != 'Windows'
+        shell: bash
+        run: file target/release/utharness | grep -F '${{ matrix.file_pattern }}'
+      - name: Package POSIX artifact
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          root="utharnessly-${{ matrix.platform }}-${{ matrix.arch }}"
+          mkdir -p "dist/package/${root}/ui"
+          cp target/release/utharness "dist/package/${root}/utharness"
+          cp -R ui/dist "dist/package/${root}/ui/dist"
+          cp ui/package.json "dist/package/${root}/ui/package.json"
+          cp README.md LICENSE "dist/package/${root}/"
+          tar -C dist/package -czf "dist/${root}.tar.gz" "${root}"
+      - name: Package Windows artifact
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $root = "utharnessly-windows-${{ matrix.arch }}"
+          New-Item -ItemType Directory -Force "dist/package/$root/ui" | Out-Null
+          Copy-Item target/release/utharness.exe "dist/package/$root/utharness.exe"
+          Copy-Item ui/dist "dist/package/$root/ui/dist" -Recurse
+          Copy-Item ui/package.json "dist/package/$root/ui/package.json"
+          Copy-Item README.md, LICENSE "dist/package/$root/"
+          Compress-Archive -Path "dist/package/$root/*" -DestinationPath "dist/$root.zip" -Force
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-${{ matrix.platform }}-${{ matrix.arch }}
+          path: dist/*
+          if-no-files-found: error
+
+  termux:
+    name: Build Termux package (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: aarch64
+            ndk_arch: arm64-v8a
+            rust_target: aarch64-linux-android
+          - arch: x86_64
+            ndk_arch: x86_64
+            rust_target: x86_64-linux-android
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa
+        with:
+          version: 11.19.0
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
+      - uses: nttld/setup-ndk@2817442ee7c3346c1eb7d2ec60263c93206ba14f
+        with:
+          ndk-version: r26b
+      - uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c
+        with:
+          targets: ${{ matrix.rust_target }}
+      - run: cargo install cargo-ndk --locked
+      - run: pnpm --dir ui install --frozen-lockfile
+      - run: pnpm --dir ui build
+      - name: Build Android-compatible Rust binary
+        env:
+          CARGO_NDK_PLATFORM: 26
+        run: cargo ndk -t ${{ matrix.ndk_arch }} build --release --package utharness-cli
+      - name: Build and validate Termux Debian package
+        shell: bash
+        env:
+          TERMUX_ARCH: ${{ matrix.arch }}
+          TERMUX_RUST_BINARY: target/${{ matrix.rust_target }}/release/utharness
+          TERMUX_UI_DIST: ui/dist
+        run: |
+          set -euo pipefail
+          export UTHARNESS_VERSION="${GITHUB_REF_NAME#v}"
+          packages/utharness/build.sh
+          deb=$(find dist/termux -maxdepth 1 -name '*.deb' -print -quit)
+          test -n "$deb"
+          dpkg-deb --info "$deb"
+          dpkg-deb --contents "$deb" | grep -F '/data/data/com.termux/files/usr/bin/utharness'
+          dpkg-deb --contents "$deb" | grep -F '/data/data/com.termux/files/usr/lib/utharness/dist/index.js'
+          sha256sum -c "$deb.sha256"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: termux-${{ matrix.arch }}
+          path: dist/termux/*
+          if-no-files-found: error
+
+  publish:
+    name: Publish release assets
+    needs: [build, termux]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: '*'
+          path: dist
+          merge-multiple: true
+      - name: Generate native checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd dist
+          sha256sum utharnessly-* > SHA256SUMS
+      - name: Collect and sign Termux repository
+        shell: bash
+        env:
+          UTHARNESS_GPG_KEY_ID: ${{ secrets.UTHARNESS_GPG_KEY_ID }}
+          UTHARNESS_GPG_PRIVATE_KEY: ${{ secrets.UTHARNESS_GPG_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          export UTHARNESS_VERSION="${GITHUB_REF_NAME#v}"
+          test -n "$UTHARNESS_GPG_KEY_ID" || { echo 'UTHARNESS_GPG_KEY_ID secret is required for signed Termux metadata' >&2; exit 2; }
+          test -n "$UTHARNESS_GPG_PRIVATE_KEY" || { echo 'UTHARNESS_GPG_PRIVATE_KEY secret is required for signed Termux metadata' >&2; exit 2; }
+          export GNUPGHOME="$RUNNER_TEMP/utharness-gnupg"
+          mkdir -m 700 "$GNUPGHOME"
+          printf '%s' "$UTHARNESS_GPG_PRIVATE_KEY" | gpg --batch --import
+          mkdir -p dist/termux-packages
+          find dist -path '*/utharness_*.deb' -exec cp {} dist/termux-packages/ \;
+          TERMUX_PACKAGE_INPUT=dist/termux-packages UTHARNESS_GPG_KEY_ID="$UTHARNESS_GPG_KEY_ID" termux/build-repository.sh dist/termux-packages dist/termux-repository
+          mkdir -p dist/termux-site/termux
+          cp -R dist/termux-repository/. dist/termux-site/termux/
+          cp termux/install.sh termux/install-repo.sh dist/termux-site/termux/
+          chmod +x dist/termux-site/termux/install.sh dist/termux-site/termux/install-repo.sh
+          tar -C dist -czf "dist/utharness-termux-repository-${UTHARNESS_VERSION}.tar.gz" termux-site
+          sha256sum "dist/utharness-termux-repository-${UTHARNESS_VERSION}.tar.gz" > "dist/utharness-termux-repository-${UTHARNESS_VERSION}.tar.gz.sha256"
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
+        with:
+          path: dist/termux-site
+      - name: Deploy Termux repository to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+      - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65
+        with:
+          generate_release_notes: true
+          files: |
+            dist/utharnessly-*.tar.gz
+            dist/utharnessly-*.zip
+            dist/SHA256SUMS
+            dist/termux-repository/pool/main/utharness/*.deb
+            dist/utharness-termux-repository-*.tar.gz
+            dist/utharness-termux-repository-*.tar.gz.sha256

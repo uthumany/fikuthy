@@ -1,0 +1,40 @@
+{
+  "name": "utharnessly",
+  "version": "0.2.13",
+  "description": "Cross-platform launcher for the utharness local-first agent terminal",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "utharnessly": "bin/utharnessly.js",
+    "utharness": "bin/utharnessly.js"
+  },
+  "files": [
+    "bin/utharnessly.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uthumany/utharnessly.git"
+  },
+  "bugs": {
+    "url": "https://github.com/uthumany/utharnessly/issues"
+  },
+  "homepage": "https://github.com/uthumany/utharnessly",
+  "keywords": [
+    "cli",
+    "terminal",
+    "agent",
+    "rust",
+    "ink",
+    "tui"
+  ],
+  "scripts": {
+    "check": "node --check bin/utharnessly.js",
+    "pack:check": "npm pack --dry-run"
+  }
+}

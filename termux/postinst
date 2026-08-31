@@ -1,0 +1,24 @@
+#!/data/data/com.termux/files/usr/bin/sh
+set -eu
+
+PREFIX_VALUE="${PREFIX:-/data/data/com.termux/files/usr}"
+HOME_VALUE="${HOME:-.}"
+for directory in \
+  "$HOME_VALUE/.config/utharness" \
+  "$HOME_VALUE/.local/share/utharness/projects" \
+  "$HOME_VALUE/.local/share/utharness/memory" \
+  "$HOME_VALUE/.local/share/utharness/sessions" \
+  "$HOME_VALUE/.local/share/utharness/downloads" \
+  "$HOME_VALUE/.local/share/utharness/logs" \
+  "$HOME_VALUE/.local/share/utharness/skills" \
+  "$HOME_VALUE/.local/share/utharness/mcp" \
+  "$HOME_VALUE/.cache/utharness"; do
+  mkdir -p "$directory"
+done
+
+printf '%s\n' \
+  'UTHARNESS installed for Termux.' \
+  'Run: utharness setup' \
+  'Updates are package-managed: pkg update && pkg upgrade utharness' \
+  'Optional integrations: pkg install termux-api git openssh python'
+exit 0

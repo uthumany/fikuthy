@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible UTHARNESS defect
+title: "bug: "
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Version
+      placeholder: utharness 0.2.9
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Minimal commands or steps, with secrets removed.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Environment
+      description: OS, architecture, terminal, installation method, and Node version.
+  - type: checkboxes
+    attributes:
+      label: Security check
+      options:
+        - label: This report does not contain credentials or a private vulnerability.
+          required: true

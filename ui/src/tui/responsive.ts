@@ -1,0 +1,6 @@
+import type { BannerMode, Breakpoint, LayoutMode } from '../types.js';
+export function getBreakpoint(columns: number): Breakpoint { if (columns < 60) return 'tiny'; if (columns < 80) return 'compact'; if (columns < 120) return 'standard'; return 'wide'; }
+export function getTermuxBreakpoint(columns: number): Breakpoint { if (columns < 50) return 'tiny'; if (columns < 90) return 'compact'; if (columns < 120) return 'standard'; return 'wide'; }
+export function effectiveLayout(requested: LayoutMode, breakpoint: Breakpoint): LayoutMode { return requested === 'workspace' && breakpoint === 'wide' ? 'workspace' : 'focus'; }
+export function bannerVariant(mode: BannerMode, breakpoint: Breakpoint, rows: number): BannerMode { if (mode === 'hide') return 'hide'; if (rows < 12) return 'minimal'; if (mode === 'minimal' || breakpoint === 'tiny') return 'minimal'; if (mode === 'compact' || breakpoint === 'compact' || rows < 24) return 'compact'; return 'full'; }
+export function workspaceWidths(columns: number) { const usable = Math.max(90, columns - 2); const navigation = Math.max(18, Math.floor(usable * 0.16)); const inspector = Math.max(26, Math.floor(usable * 0.24)); return { navigation, chat: usable - navigation - inspector, inspector }; }

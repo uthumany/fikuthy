@@ -1,0 +1,14 @@
+[package]
+name = "utharness-security"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+regex.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+utharness-core = { path = "../utharness-core" }
+
+[dev-dependencies]
+tempfile.workspace = true

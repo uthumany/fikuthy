@@ -195,6 +195,41 @@ impl Storage {
         })
     }
 
+    /// Update memory importance (for learning loop feedback).
+    pub fn update_memory_importance(&self, id: &Id, importance: f64) -> Result<()> {
+        self.with_connection(|conn| {
+            conn.execute(
+                "UPDATE memories SET importance = ?1, updated_at = ?2 WHERE id = ?3",
+                params![importance, now_ms(), id.to_string()],
+            )?;
+            Ok(())
+        })
+    }
+
+    /// Soft-delete a memory entry.
+    pub fn delete_memory(&self, id: &Id) -> Result<()> {
+        self.with_connection(|conn| {
+            conn.execute(
+                "UPDATE memories SET deleted_at = ?1 WHERE id = ?2",
+                params![now_ms(), id.to_string()],
+            )?;
+            Ok(())
+        })
+    }
+
+    /// Count memories by scope for diagnostics.
+    pub fn memory_stats(&self, workspace_id: Option<Id>) -> Result<Vec<(String, u32)>> {
+        self.with_connection(|conn| {
+            let mut stmt = conn.prepare(
+                "SELECT scope, COUNT(*) FROM memories WHERE (?1 IS NULL OR workspace_id = ?1) AND deleted_at IS NULL GROUP BY scope"
+            )?;
+            let rows = stmt.query_map(params![workspace_id.map(|v| v.to_string())], |row| {
+                Ok((row.get::<_, String>(0)?, row.get::<_, u32>(1)?))
+            })?;
+            Ok(rows.collect::<std::result::Result<Vec<_>, _>>()?)
+        })
+    }
+
     pub fn create_checkpoint(
         &self,
         session_id: Id,

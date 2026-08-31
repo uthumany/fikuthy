@@ -18,6 +18,7 @@ use fikuthy_storage::Storage;
 
 mod banner;
 mod execution;
+mod setup_interactive;
 mod setup_system;
 mod skills;
 mod termux;
@@ -1056,7 +1057,7 @@ fn setup(args: SetupArgs) -> Result<()> {
         return Ok(());
     }
     if !args.non_interactive && io::stdin().is_terminal() && io::stdout().is_terminal() {
-        return launch_ui(&["--setup"]);
+        return setup_interactive::run_interactive_setup();
     }
 
     let app = App::open(".")?;

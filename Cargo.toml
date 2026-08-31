@@ -6,6 +6,7 @@ members = [
   "crates/fikuthy-security",
   "crates/fikuthy-cli",
   "crates/fikuthy-provider",
+  "crates/fikuthy-skills",
 ]
 
 [workspace.package]
